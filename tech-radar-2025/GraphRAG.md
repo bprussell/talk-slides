@@ -15,7 +15,7 @@ Advancing Retrieval-Augmented Generation
 
 ## Baseline RAG
 
-<img src="baseline-rag-diagram.png" alt="Baseline RAG" style="width:auto; height:500px;" />
+<img src="baseline-rag-diagram.png" alt="Baseline RAG" style="width:auto; height:500px; display: block; margin: auto;" />
 
 ---
 
@@ -40,7 +40,7 @@ Advancing Retrieval-Augmented Generation
 ## GraphRAG
 
 
-<img src="graph-rag-diagram.png" alt="GraphRAG Diagram" style="width:auto; height:550px;" />
+<img src="graph-rag-diagram.png" alt="GraphRAG Diagram" style="width:auto; height:550px; display: block; margin: auto;" />
 
 ---
 
@@ -49,7 +49,7 @@ Advancing Retrieval-Augmented Generation
 - Improved answers for:
   - Broad questions
   - Vague questions
-  - Questions requiring contextual awareness
+  - Questions needing context
 - Better explainability
 
 ---
