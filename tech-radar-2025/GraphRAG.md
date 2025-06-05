@@ -15,24 +15,7 @@ Advancing Retrieval-Augmented Generation
 
 ## Baseline RAG
 
-**RAG = Retrieval-Augmented Generation**
-
-- Combines large language models (LLMs) with an external retrieval system
-- Steps:
-  1. **Query**: User input sent to retrieval module
-  2. **Retrieve**: Most relevant documents ("chunks") retrieved from a corpus
-  3. **Generate**: LLM generates answer conditioned on retrieved context
-
-- Widely used for QA, chatbots, internal knowledge assistants
-
----
-
-## Baseline RAG: Example
-
-> **Question**: "Describe the benefits of Graph Neural Networks."
-
-- **Retrieval**: Top 3 document chunks about Graph Neural Networks
-- **Generation**: LLM reads chunks & produces an answer
+<img src="baseline-rag-diagram.png" alt="Baseline RAG" style="width:auto; height:500px;" />
 
 ---
 
@@ -91,19 +74,12 @@ Advancing Retrieval-Augmented Generation
 
 ---
 
-## When to Use GraphRAG
+<!--
+style: "img { width: 400px; max-width: 100%; height: auto; display: block; margin: auto; }"
+-->
 
-- Precise Q&A over interrelated data
-- Discovery/insight in complex domains (scientific, legal, enterprise knowledge)
-- Any use case where **relationships** between facts matter
+## Tech Radar: Trial
 
----
+#### My Rating: Trial
 
-## Summary
-
-- **Baseline RAG:** Easy to set up, but shallow and context-limited
-- **GraphRAG:** Adds depth by connecting facts, reduces hallucination, and enables smarter systems
-
-**Questions? Let's discuss!**
-
----
+<img src="radar-blip.png" alt="Alt Text" style="width:350px; height:200px;" />
