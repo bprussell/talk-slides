@@ -29,7 +29,7 @@ Advancing Retrieval-Augmented Generation
 ## Knowledge Graph
 
 <img src="knowledge-graph.png" alt="Knowledge Graph" style="width:auto; height:500px;" />
-
+<br/>
 <span style="font-size:0.3em;color:#555;">
 <a href="https://convergetp.com/2024/08/07/graphrag-elevating-rag-with-next-gen-knowledge-graphs/">Source 1</a>
 <a href="https://www.microsoft.com/en-us/research/blog/graphrag-unlocking-llm-discovery-on-narrative-private-data/">Source 2</a>
