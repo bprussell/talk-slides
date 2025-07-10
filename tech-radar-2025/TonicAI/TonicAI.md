@@ -102,8 +102,18 @@ Generate training data for ML models
 
 ---
 
+## Alternatives in the Market
+
+**Synthesized** - AI-powered, strong tabular data
+
+**MOSTLY AI** - European, GDPR-compliant
+
+**Others** - Gretel.ai, DataSynthesizer, etc.
+
+---
+
 ## Tech Radar: Assess
 
 #### My Rating: Assess
 
-*Promising technology worth evaluating for teams handling sensitive data*
+*Synthetic data in general: Trial*
