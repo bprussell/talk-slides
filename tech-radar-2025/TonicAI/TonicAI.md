@@ -25,9 +25,11 @@ Synthetic Data for Modern Development
 ## Traditional Solutions Fall Short
 
 - **Data masking**: Often breaks referential integrity
-- **Anonymization**: Can still be reverse-engineered  
-- **Synthetic generation**: Usually unrealistic or unusable
+- **Algorithmic generation**: Can be unrealistic or unusable
 - **Data subsets**: Limited scope and scenarios
+- **Anonymization**: Can still be reverse-engineered  
+
+![w:200 center](image.png)
 
 ---
 
@@ -38,6 +40,8 @@ Synthetic Data for Modern Development
 ### Smart Synthetic Data Generation
 
 *Maintains relationships • Preserves patterns • Ensures privacy*
+
+**Supports both structured and unstructured data**
 
 </div>
 
