@@ -25,7 +25,7 @@ Synthetic Data for Modern Development
 ## Traditional Solutions Fall Short
 
 - **Data masking**: Often breaks referential integrity
-- **Algorithmic generation**: Can be unrealistic or unusable
+- **Rule-based generation**: Can be unrealistic or unusable
 - **Data subsets**: Limited scope and scenarios
 - **Anonymization**: Can still be reverse-engineered  
 
