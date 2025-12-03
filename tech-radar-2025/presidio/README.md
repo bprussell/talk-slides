@@ -52,17 +52,16 @@ npm run build
 ## Presentation Structure
 
 1. **Title** - Introduction
-2. **The Privacy Challenge** - Problem statement
-3. **What is Presidio** - Overview with code example
-4. **Detection Capabilities** - Built-in features
-5. **Deployment Flexibility** - How to deploy
-6. **Key Use Cases** - When to use it
-7. **The Important Caveat** - Limitations warning
-8. **Benefits** - Why consider it
-9. **Challenges** - What to watch out for
-10. **Tech Radar Rating** - Final assessment
+2. **What is Presidio** - Overview with code example
+3. **Use Cases & Benefits** - When to use it and why
+4. **The Important Caveat** - Critical limitations warning
+5. **Alternatives in the Market** - Competitive landscape
+6. **Tech Radar: Trial** - Final recommendation
+7. **Demo!** - Live demonstration
 
 **Target Duration:** 2 minutes
+
+**Theme:** the-unnamed (modern, bold design with strong typography)
 
 ## Learn More
 
