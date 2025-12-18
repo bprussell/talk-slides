@@ -51,8 +51,9 @@ layout: default
 <div>
 
 ## AI & Search
-- **LLM**: GPT-4.1 + GPT-4.1-mini
-- **Embeddings**: text-embedding-3-small (1536d)
+- **AI Provider**: Azure Foundry
+  - LLM: GPT-4.1 + GPT-4.1-mini
+  - Embeddings: text-embedding-3-small (1536d)
 - **Vector Database**: Pinecone (cloud)
 - **Text Processing**: LangChain splitter
 
@@ -65,9 +66,9 @@ layout: default
 <div>
 
 ## Document Processing
-- **Storage**: Azure Blob Storage
-- **Indexing**: Azure Functions (serverless)
-- **Formats**: PDF, DOCX, PPTX, TXT, MSG
+- **Content Sources**: Blob Storage + Website scraping
+- **Initial Indexing**: Local scripts (full reindex)
+- **Scheduled Updates**: Azure Functions
 
 ## Monitoring & Admin
 - **Operations**: Azure Table Storage
@@ -166,10 +167,10 @@ layout: default
   <!-- REFINEMENT -->
   <div class="border border-purple-400 bg-purple-400 bg-opacity-10 rounded-lg p-5 text-center flex-1 mx-2">
     <div class="text-xs opacity-60 tracking-wide">PHASE 3</div>
-    <div class="font-semibold text-sm mt-1">REFINEMENT</div>
+    <div class="font-semibold text-sm mt-1">ANSWER GENERATION</div>
     <div class="text-xs mt-3 space-y-2 opacity-80">
-      <div>Extract</div>
-      <div>Synthesize</div>
+      <div>Generate</div>
+      <div>Combine</div>
     </div>
   </div>
 </div>
@@ -241,11 +242,12 @@ layout: default
 Instead of searching once, we search **three times** with different embeddings:
 
 1. **HyDE Result** - The hypothetical answer(s) from HyDE generation
-2. **Original Query** - The user's actual question
-3. **Simplified Query** - A stripped-down version of the question
+2. **Original Query** - The user's actual question with full context
+3. **Simplified Query** - Core concepts only (removes qualifiers and context)
+   - Example: "Can I access my pension early?" → "Pension early access"
+   - Finds documents that discuss the concept with different terminology
 
-### Merging & Boosting
-Results are merged and documents found by **multiple searches are boosted** in ranking - they're likely more relevant.
+These three searches are then merged and re-ranked to find the most relevant documents.
 
 </div>
 
@@ -279,15 +281,13 @@ layout: default
 
 <div class="text-sm">
 
-**GPT-4.1** extracts information from all retrieved documents
+**GPT-4.1** generates multiple answers from all retrieved documents
 
 ### Process
 - XML-formatted context sent to GPT-4.1
-- Prompt: "Extract ALL relevant info from ALL documents"
-- Output: Structured JSON with citations per fact
-
-### Goal
-Gather complete information without filtering - we'll filter in the next stage
+- Extracts each distinct piece of information from documents
+- Outputs JSON array with multiple answers
+- Each answer has its own citation
 
 </div>
 
@@ -299,17 +299,18 @@ layout: default
 
 <div class="text-sm">
 
-**GPT-4.1** synthesizes extraction results into a concise response
+**GPT-4.1** combines multiple extracted answers into a single coherent response
 
 ### Process
-- Takes all extracted information
-- Removes contradictions
-- Combines duplicate findings
+- Takes all answers generated in extraction phase
+- Combines non-conflicting information
+- Removes duplicate findings
+- Resolves contradictions intelligently
 - Preserves all citation markers [1], [2], etc.
 - Temperature=0 for data_lookup (prevents number hallucination)
 
 ### Goal
-Balance completeness with readability
+Synthesize comprehensive answer that includes all relevant information while maintaining clarity and readability
 
 </div>
 
