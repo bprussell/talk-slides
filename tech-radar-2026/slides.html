@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agents in 2026: Skills, Plugins & MCP — Tech Radar Vol 34</title>
+
+    <!-- Fonts: Archivo (display, narrower letterforms) + Manrope (body) + JetBrains Mono (code/accents) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           THEME: ELECTRIC RADAR
+           Dark deep-space background, electric blue + neon yellow,
+           hot pink reserved for Caution ring.
+           ========================================================= */
+        :root {
+            /* Core palette */
+            --bg-deep:        #07070d;
+            --bg-mid:         #0d1024;
+            --bg-card:        #14172e;
+            --ink:            #f5f3ee;
+            --ink-dim:        #8a8aa3;
+            --ink-faint:      #4a4d6b;
+
+            /* Accents */
+            --electric:       #2a6dff;      /* primary accent */
+            --electric-soft:  #4d8aff;
+            --neon:           #e8ff3d;      /* secondary accent */
+            --hot:            #ff3d7f;      /* warning / caution */
+            --gold:           #ffb800;      /* assess */
+            --mint:           #00ff9c;      /* adopt */
+
+            /* Ring colors */
+            --ring-adopt:    var(--mint);
+            --ring-trial:    var(--electric-soft);
+            --ring-assess:   var(--gold);
+            --ring-hold:     #ff5050;
+            --ring-caution:  var(--hot);
+
+            /* Typography */
+            --font-display:  'Archivo', system-ui, sans-serif;
+            --font-body:     'Manrope', system-ui, sans-serif;
+            --font-mono:     'JetBrains Mono', ui-monospace, monospace;
+
+            /* Sizing (all clamp() — viewport fitting) */
+            --title-size:     clamp(2rem, 6.5vw, 5.5rem);
+            --h2-size:        clamp(1.4rem, 4vw, 3rem);
+            --h3-size:        clamp(1.05rem, 2.4vw, 1.7rem);
+            --body-size:      clamp(0.78rem, 1.35vw, 1.05rem);
+            --small-size:     clamp(0.65rem, 1vw, 0.85rem);
+            --code-size:      clamp(0.65rem, 1.05vw, 0.95rem);
+            --huge-num:       clamp(4rem, 14vw, 11rem);
+
+            /* Spacing */
+            --slide-padding:  clamp(1.25rem, 4vw, 3.5rem);
+            --content-gap:    clamp(0.5rem, 1.6vw, 1.5rem);
+            --element-gap:    clamp(0.3rem, 0.9vw, 0.85rem);
+
+            /* Motion */
+            --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+            --dur:            0.7s;
+        }
+
+        /* =========================================================
+           RESET
+           ========================================================= */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            font-size: var(--body-size);
+            color: var(--ink);
+            background: var(--bg-deep);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* =========================================================
+           VIEWPORT FITTING — MANDATORY BASE
+           (from viewport-base.css — every slide locked to 100vh)
+           ========================================================= */
+        html, body { height: 100%; overflow-x: hidden; }
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background:
+                radial-gradient(ellipse 80% 50% at 80% 0%, rgba(42, 109, 255, 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 60% at 0% 100%, rgba(232, 255, 61, 0.05) 0%, transparent 60%),
+                linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden;
+            padding: var(--slide-padding);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =========================================================
+           PERSISTENT CHROME
+           Slide number + progress bar + section pill
+           ========================================================= */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--electric), var(--neon));
+            width: 0%;
+            z-index: 10000;
+            transition: width 0.3s var(--ease-out-expo);
+            box-shadow: 0 0 12px var(--electric);
+        }
+
+        .slide-meta {
+            position: absolute;
+            top: clamp(0.75rem, 2vh, 1.5rem);
+            right: clamp(0.75rem, 2vw, 1.5rem);
+            display: flex;
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--ink-faint);
+            letter-spacing: 0.05em;
+            z-index: 3;
+        }
+
+        .slide-meta .num { color: var(--ink-dim); }
+        .slide-meta .sep { opacity: 0.4; }
+
+        .slide-tag {
+            position: absolute;
+            top: clamp(0.75rem, 2vh, 1.5rem);
+            left: clamp(0.75rem, 2vw, 1.5rem);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--ink-faint);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            z-index: 3;
+        }
+
+        .slide-tag::before {
+            content: "■";
+            color: var(--electric);
+            margin-right: 0.5em;
+        }
+
+        /* =========================================================
+           ANIMATIONS — staggered reveal on .visible
+           ========================================================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity var(--dur) var(--ease-out-expo),
+                        transform var(--dur) var(--ease-out-expo);
+        }
+        .slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+        .reveal[data-delay="1"] { transition-delay: 0.08s; }
+        .reveal[data-delay="2"] { transition-delay: 0.18s; }
+        .reveal[data-delay="3"] { transition-delay: 0.28s; }
+        .reveal[data-delay="4"] { transition-delay: 0.38s; }
+        .reveal[data-delay="5"] { transition-delay: 0.48s; }
+        .reveal[data-delay="6"] { transition-delay: 0.58s; }
+        .reveal[data-delay="7"] { transition-delay: 0.68s; }
+        .reveal[data-delay="8"] { transition-delay: 0.78s; }
+
+        .reveal-blur {
+            opacity: 0;
+            filter: blur(14px);
+            transition: opacity 0.9s var(--ease-out-expo),
+                        filter 0.9s var(--ease-out-expo);
+        }
+        .slide.visible .reveal-blur { opacity: 1; filter: blur(0); }
+
+        /* =========================================================
+           TYPOGRAPHY
+           ========================================================= */
+        h1, h2, h3 {
+            font-family: var(--font-display);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+        }
+
+        h1 { font-size: var(--title-size); }
+        h2 { font-size: var(--h2-size); }
+        h3 { font-size: var(--h3-size); font-weight: 700; }
+
+        .accent-line {
+            display: inline-block;
+            width: clamp(2rem, 5vw, 4rem);
+            height: 4px;
+            background: var(--electric);
+            margin-bottom: var(--content-gap);
+        }
+
+        .kicker {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--electric-soft);
+        }
+
+        .mono { font-family: var(--font-mono); }
+
+        /* =========================================================
+           RING BADGES — the punchline of the talk
+           ========================================================= */
+        .ring {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55em;
+            padding: clamp(0.3rem, 0.7vh, 0.55rem) clamp(0.65rem, 1.4vw, 1.1rem);
+            border-radius: 999px;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: var(--small-size);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            border: 1.5px solid currentColor;
+        }
+        .ring::before {
+            content: "";
+            width: 0.6em;
+            height: 0.6em;
+            border-radius: 999px;
+            background: currentColor;
+            box-shadow: 0 0 0.7em currentColor;
+        }
+        .ring--adopt   { color: var(--ring-adopt); }
+        .ring--trial   { color: var(--ring-trial); }
+        .ring--assess  { color: var(--ring-assess); }
+        .ring--hold    { color: var(--ring-hold); }
+        .ring--caution {
+            color: var(--ring-caution);
+            background: rgba(255, 61, 127, 0.08);
+            box-shadow: 0 0 24px rgba(255, 61, 127, 0.25), inset 0 0 24px rgba(255, 61, 127, 0.05);
+        }
+        .ring--caution::before { animation: pulse 1.6s ease-in-out infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%      { opacity: 0.6; transform: scale(1.25); }
+        }
+
+        .ring--big {
+            font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+            padding: clamp(0.5rem, 1vh, 0.85rem) clamp(0.9rem, 2vw, 1.5rem);
+        }
+
+        /* =========================================================
+           TITLE SLIDE
+           ========================================================= */
+        .title-slide .slide-content {
+            justify-content: center;
+            text-align: left;
+        }
+        .title-slide .kicker { margin-bottom: var(--content-gap); }
+        .title-slide h1 {
+            font-size: clamp(2.5rem, 8.5vw, 7.5rem);
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -0.035em;
+            margin-bottom: var(--content-gap);
+        }
+        .title-slide h1 .accent { color: var(--neon); font-style: italic; }
+        .title-slide .subtitle {
+            font-size: clamp(1rem, 2.2vw, 1.6rem);
+            color: var(--ink-dim);
+            max-width: 38ch;
+            line-height: 1.35;
+            margin-bottom: calc(var(--content-gap) * 2);
+        }
+        .title-slide .byline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25em;
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--ink-faint);
+        }
+        .title-slide .byline strong { color: var(--ink); font-weight: 500; }
+
+        /* Decorative blob on title */
+        .title-blob {
+            position: absolute;
+            top: 50%; right: -8%;
+            width: clamp(20rem, 45vw, 40rem);
+            height: clamp(20rem, 45vw, 40rem);
+            transform: translateY(-50%);
+            background: radial-gradient(circle at center, rgba(42, 109, 255, 0.35) 0%, rgba(42, 109, 255, 0) 65%);
+            filter: blur(40px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* =========================================================
+           SECTION HEADER SLIDES — big number + ring + topic
+           ========================================================= */
+        .section-slide .slide-content {
+            justify-content: flex-end;
+            padding-bottom: clamp(2rem, 6vh, 4rem);
+        }
+        .section-slide .huge-num {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: var(--huge-num);
+            line-height: 0.85;
+            color: var(--electric);
+            letter-spacing: -0.04em;
+            position: absolute;
+            top: clamp(2.5rem, 8vh, 5rem);
+            left: var(--slide-padding);
+            opacity: 0.95;
+        }
+        .section-slide .huge-num .slash {
+            color: var(--ink-faint);
+            font-weight: 600;
+        }
+        .section-slide h2 {
+            font-size: clamp(2rem, 7vw, 5rem);
+            margin-top: 0;
+            margin-bottom: var(--content-gap);
+        }
+        .section-slide .section-desc {
+            font-size: clamp(0.95rem, 1.8vw, 1.35rem);
+            color: var(--ink-dim);
+            max-width: 48ch;
+            line-height: 1.4;
+            margin-top: var(--element-gap);
+        }
+        .section-slide .section-ring { margin-bottom: calc(var(--content-gap) * 1.5); }
+
+        /* Caution section gets a red wash */
+        .section-slide.caution {
+            background:
+                radial-gradient(ellipse 70% 50% at 100% 0%, rgba(255, 61, 127, 0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 60% at 0% 100%, rgba(255, 61, 127, 0.10) 0%, transparent 60%),
+                linear-gradient(180deg, #150708 0%, #1a0a10 100%);
+        }
+        .section-slide.caution .huge-num { color: var(--hot); }
+        .section-slide.caution .section-desc { color: #d9c3c7; }
+
+        /* Diagonal stripes accent for caution */
+        .stripes {
+            position: absolute;
+            top: 0; right: 0;
+            width: clamp(8rem, 18vw, 14rem);
+            height: 100%;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent 0,
+                transparent 16px,
+                rgba(255, 61, 127, 0.08) 16px,
+                rgba(255, 61, 127, 0.08) 32px
+            );
+            pointer-events: none;
+        }
+
+        /* =========================================================
+           OVERVIEW GRID — the 4 radar entries as a single roadmap
+           ========================================================= */
+        .radar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(0.65rem, 1.5vw, 1.25rem);
+            margin-top: var(--content-gap);
+        }
+        .radar-card {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 14px;
+            padding: clamp(0.85rem, 1.8vw, 1.4rem);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.4rem, 1vh, 0.7rem);
+            transition: transform 0.3s var(--ease-out-expo), border-color 0.3s;
+        }
+        .radar-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+        .radar-card .card-cat {
+            font-family: var(--font-mono);
+            font-size: clamp(0.6rem, 0.95vw, 0.78rem);
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--ink-faint);
+        }
+        .radar-card h3 {
+            font-size: clamp(0.95rem, 1.9vw, 1.45rem);
+            line-height: 1.1;
+        }
+        .radar-card .card-desc {
+            font-size: clamp(0.7rem, 1.1vw, 0.9rem);
+            color: var(--ink-dim);
+            line-height: 1.4;
+        }
+
+        /* =========================================================
+           ARC SLIDE — the narrative flow
+           ========================================================= */
+        .arc-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+            align-items: center;
+            gap: clamp(0.4rem, 1vw, 0.85rem);
+            margin-top: clamp(1rem, 3vh, 2rem);
+        }
+        .arc-step {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: clamp(0.7rem, 1.5vw, 1.1rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .arc-step.is-caution {
+            border-color: rgba(255, 61, 127, 0.4);
+            background: rgba(255, 61, 127, 0.06);
+        }
+        .arc-step .step-num {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--electric);
+            letter-spacing: 0.12em;
+        }
+        .arc-step.is-caution .step-num { color: var(--hot); }
+        .arc-step .step-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+            line-height: 1.15;
+        }
+        .arc-step .step-blurb {
+            font-size: clamp(0.65rem, 1vw, 0.78rem);
+            color: var(--ink-dim);
+            line-height: 1.35;
+        }
+        .arc-arrow {
+            font-family: var(--font-mono);
+            color: var(--electric);
+            font-size: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        /* =========================================================
+           TWO-COLUMN LAYOUT
+           ========================================================= */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 3vw, 2.5rem);
+            margin-top: var(--content-gap);
+            align-items: start;
+        }
+        .col h3 { margin-bottom: var(--element-gap); }
+
+        /* =========================================================
+           BULLET LIST
+           ========================================================= */
+        ul.bullets, ol.bullets {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.4rem, 1vh, 0.85rem);
+            margin-top: var(--element-gap);
+        }
+        ul.bullets li, ol.bullets li {
+            padding-left: 1.4em;
+            position: relative;
+            font-size: var(--body-size);
+            line-height: 1.4;
+            color: var(--ink);
+        }
+        ul.bullets li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--electric);
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+        ol.bullets {
+            counter-reset: item;
+        }
+        ol.bullets li {
+            counter-increment: item;
+        }
+        ol.bullets li::before {
+            content: counter(item, decimal-leading-zero);
+            position: absolute;
+            left: 0;
+            color: var(--electric);
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           CODE BLOCKS
+           ========================================================= */
+        pre.code, code.code {
+            font-family: var(--font-mono);
+            font-size: var(--code-size);
+            line-height: 1.55;
+            background: rgba(7, 7, 13, 0.6);
+            border: 1px solid rgba(42, 109, 255, 0.2);
+            border-radius: 10px;
+            padding: clamp(0.7rem, 1.5vw, 1.1rem) clamp(0.85rem, 1.8vw, 1.3rem);
+            color: var(--ink);
+            overflow: hidden;
+            white-space: pre;
+            tab-size: 2;
+        }
+        pre.code .k { color: var(--electric-soft); }   /* key */
+        pre.code .s { color: var(--neon); }            /* string */
+        pre.code .c { color: var(--ink-faint); font-style: italic; } /* comment */
+        pre.code .y { color: var(--hot); }             /* highlight */
+        pre.code .n { color: var(--gold); }            /* number */
+
+        .code-label {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--ink-faint);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.4em;
+        }
+
+        /* =========================================================
+           PULL QUOTE — for the MCP-by-default punchline
+           ========================================================= */
+        .pull-quote {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(1.5rem, 4.5vw, 3.5rem);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            max-width: 22ch;
+        }
+        .pull-quote .open {
+            color: var(--hot);
+            font-size: 1.4em;
+            line-height: 0;
+            vertical-align: -0.15em;
+            margin-right: 0.08em;
+        }
+        .pull-quote em { color: var(--hot); font-style: italic; }
+        .quote-attr {
+            margin-top: clamp(1rem, 3vh, 2rem);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--ink-faint);
+            letter-spacing: 0.12em;
+        }
+
+        /* =========================================================
+           DEMO SLIDES — high impact, single screen
+           ========================================================= */
+        .demo-slide .slide-content {
+            justify-content: center;
+            align-items: flex-start;
+            gap: var(--content-gap);
+        }
+        .demo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            background: var(--neon);
+            color: var(--bg-deep);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            padding: clamp(0.35rem, 0.9vh, 0.6rem) clamp(0.7rem, 1.5vw, 1.1rem);
+            border-radius: 4px;
+            box-shadow: 0 0 32px rgba(232, 255, 61, 0.4);
+        }
+        .demo-badge::before {
+            content: "▶";
+            font-size: 0.85em;
+        }
+        .demo-slide h2 {
+            font-size: clamp(2.2rem, 6vw, 4.5rem);
+        }
+        .demo-slide h2 em {
+            color: var(--neon);
+            font-style: normal;
+            font-weight: 800;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 2.5vw, 2rem);
+            margin-top: clamp(0.5rem, 1.5vh, 1.2rem);
+            width: 100%;
+            max-width: 1100px;
+        }
+        .demo-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: clamp(0.8rem, 1.8vw, 1.3rem);
+        }
+        .demo-card .card-label {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--neon);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 0.5em;
+        }
+        .demo-card .card-body {
+            font-size: clamp(0.78rem, 1.25vw, 1rem);
+            color: var(--ink-dim);
+            line-height: 1.5;
+        }
+
+        /* =========================================================
+           CHECKLIST CALLOUT
+           ========================================================= */
+        .checklist {
+            background: rgba(42, 109, 255, 0.08);
+            border-left: 3px solid var(--electric);
+            border-radius: 0 12px 12px 0;
+            padding: clamp(0.85rem, 2vw, 1.4rem) clamp(1rem, 2.2vw, 1.6rem);
+            margin-top: var(--content-gap);
+        }
+        .checklist h3 {
+            font-size: clamp(0.85rem, 1.5vw, 1.15rem);
+            color: var(--electric-soft);
+            margin-bottom: 0.6em;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .checklist ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.3rem, 0.8vh, 0.6rem);
+        }
+        .checklist ul li {
+            padding-left: 1.5em;
+            position: relative;
+            font-size: clamp(0.78rem, 1.25vw, 1rem);
+        }
+        .checklist ul li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--neon);
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           PLUGIN ANATOMY DIAGRAM
+           ========================================================= */
+        .plugin-tree {
+            font-family: var(--font-mono);
+            font-size: clamp(0.7rem, 1.15vw, 0.95rem);
+            line-height: 1.65;
+            background: rgba(7, 7, 13, 0.6);
+            border: 1px solid rgba(232, 255, 61, 0.2);
+            border-radius: 10px;
+            padding: clamp(0.9rem, 2vw, 1.4rem);
+            color: var(--ink-dim);
+        }
+        .plugin-tree .root { color: var(--neon); font-weight: 700; }
+        .plugin-tree .dir { color: var(--electric-soft); }
+        .plugin-tree .skill { color: var(--ink); }
+        .plugin-tree .mcp { color: var(--hot); }
+        .plugin-tree .annotation {
+            color: var(--ink-faint);
+            font-style: italic;
+        }
+
+        /* =========================================================
+           CLIENT LOGOS ROW
+           ========================================================= */
+        .client-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.5rem, 1.5vw, 1.2rem);
+            margin-top: var(--content-gap);
+        }
+        .client-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            padding: clamp(0.4rem, 1vh, 0.65rem) clamp(0.85rem, 1.8vw, 1.4rem);
+            font-family: var(--font-mono);
+            font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+            color: var(--ink);
+            letter-spacing: 0.04em;
+        }
+        .client-pill .dot {
+            display: inline-block;
+            width: 0.55em;
+            height: 0.55em;
+            border-radius: 999px;
+            background: var(--mint);
+            margin-right: 0.5em;
+            vertical-align: 0.05em;
+            box-shadow: 0 0 8px var(--mint);
+        }
+
+        /* =========================================================
+           BIG CALLOUT FOR THE CASE-STUDY CLOSE
+           ========================================================= */
+        .case-study {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(0.7rem, 1.8vw, 1.4rem);
+            margin-top: var(--content-gap);
+        }
+        .case-side {
+            border-radius: 14px;
+            padding: clamp(0.9rem, 2vw, 1.4rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.6em;
+        }
+        .case-side.left {
+            background: rgba(42, 109, 255, 0.08);
+            border: 1px solid rgba(42, 109, 255, 0.35);
+        }
+        .case-side.right {
+            background: rgba(232, 255, 61, 0.06);
+            border: 1px solid rgba(232, 255, 61, 0.3);
+        }
+        .case-side .case-label {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        .case-side.left .case-label  { color: var(--electric-soft); }
+        .case-side.right .case-label { color: var(--neon); }
+        .case-side .case-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(1rem, 1.9vw, 1.5rem);
+            line-height: 1.15;
+        }
+        .case-side .case-body {
+            font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+            color: var(--ink-dim);
+            line-height: 1.45;
+        }
+
+        /* =========================================================
+           CLOSING / RECAP
+           ========================================================= */
+        .recap-rings {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.5rem, 1.5vw, 1.2rem);
+            margin-top: var(--content-gap);
+        }
+        .recap-rings .recap-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: clamp(0.65rem, 1.4vw, 1rem) clamp(0.85rem, 1.8vw, 1.3rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4em;
+            min-width: clamp(11rem, 22vw, 16rem);
+        }
+        .recap-rings .recap-item .recap-name {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+        }
+
+        /* =========================================================
+           BACKGROUND DECORATIONS
+           ========================================================= */
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: clamp(40px, 5vw, 64px) clamp(40px, 5vw, 64px);
+            mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 70%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* =========================================================
+           RESPONSIVE BREAKPOINTS
+           ========================================================= */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(0.85rem, 3vw, 2rem);
+                --content-gap:   clamp(0.4rem, 1.2vw, 1rem);
+                --title-size:    clamp(1.5rem, 5.5vw, 4rem);
+                --h2-size:       clamp(1.15rem, 3.2vw, 2.2rem);
+                --huge-num:      clamp(3rem, 11vw, 8rem);
+            }
+        }
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.6rem, 2.5vw, 1.5rem);
+                --title-size:    clamp(1.25rem, 4.5vw, 2.5rem);
+                --body-size:     clamp(0.7rem, 1.15vw, 0.9rem);
+            }
+            .nav-dots, .keyboard-hint { display: none; }
+        }
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.4rem, 2vw, 1rem);
+                --title-size:    clamp(1.1rem, 4vw, 2rem);
+            }
+        }
+        @media (max-width: 700px) {
+            .two-col, .demo-grid, .case-study, .radar-grid {
+                grid-template-columns: 1fr;
+            }
+            .arc-row {
+                grid-template-columns: 1fr;
+            }
+            .arc-arrow { transform: rotate(90deg); justify-self: center; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- ========================================================
+         SLIDE 1 — TITLE
+         ======================================================== -->
+    <section class="slide title-slide" data-section="Intro">
+        <div class="title-blob reveal-blur"></div>
+        <div class="slide-content">
+            <div class="kicker reveal">Tech Radar Vol 34 · April 2026</div>
+            <h1 class="reveal" data-delay="1">
+                Agents in 2026:<br>
+                Skills, Plugins<br>
+                <span class="accent">&amp; MCP</span>
+            </h1>
+            <p class="subtitle reveal" data-delay="2">
+                Four radar entries, one story — and two demos that should make you suspicious of the obvious answer.
+            </p>
+            <div class="byline reveal" data-delay="3">
+                <strong>Brad Russell</strong>
+                <span>E-gineering · Tech Radar Talk</span>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">01</span>
+            <span class="sep">/</span>
+            <span>Intro</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 2 — THE 4 RADAR ENTRIES
+         ======================================================== -->
+    <section class="slide" data-section="Intro">
+        <div class="grid-bg"></div>
+        <div class="slide-tag">The Map</div>
+        <div class="slide-content">
+            <div class="kicker reveal">Four entries · Vol 34</div>
+            <h2 class="reveal" data-delay="1">These four are <em style="color:var(--neon); font-style:normal;">one story</em>.</h2>
+            <div class="radar-grid">
+                <div class="radar-card reveal" data-delay="2">
+                    <span class="card-cat">Techniques</span>
+                    <h3>Agent Skills</h3>
+                    <span class="ring ring--trial">Trial</span>
+                    <p class="card-desc">Modular instructions + scripts, loaded on demand.</p>
+                </div>
+                <div class="radar-card reveal" data-delay="3">
+                    <span class="card-cat">Tools</span>
+                    <h3>Plugin Marketplace</h3>
+                    <span class="ring ring--trial">Trial</span>
+                    <p class="card-desc">Git-based distribution for skills, commands, prompts.</p>
+                </div>
+                <div class="radar-card reveal" data-delay="4">
+                    <span class="card-cat">Techniques</span>
+                    <h3>MCP by Default</h3>
+                    <span class="ring ring--caution">Caution</span>
+                    <p class="card-desc">Stop reaching for MCP when a CLI would do.</p>
+                </div>
+                <div class="radar-card reveal" data-delay="5">
+                    <span class="card-cat">Platforms</span>
+                    <h3>MCP Apps</h3>
+                    <span class="ring ring--assess">Assess</span>
+                    <p class="card-desc">Interactive UI rendered inside an MCP response.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">02</span>
+            <span class="sep">/</span>
+            <span>The Map</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 3 — THE NARRATIVE ARC
+         ======================================================== -->
+    <section class="slide" data-section="Intro">
+        <div class="slide-tag">The Arc</div>
+        <div class="slide-content">
+            <div class="kicker reveal">How we'll walk through them</div>
+            <h2 class="reveal" data-delay="1">Build it. Share it. <span style="color:var(--hot);">Question it.</span> Extend it.</h2>
+            <div class="arc-row">
+                <div class="arc-step reveal" data-delay="2">
+                    <span class="step-num">01 · BUILD</span>
+                    <span class="step-title">Agent Skills</span>
+                    <span class="step-blurb">The building block. Modular, on-demand context.</span>
+                </div>
+                <div class="arc-arrow reveal" data-delay="2">→</div>
+                <div class="arc-step reveal" data-delay="3">
+                    <span class="step-num">02 · SHARE</span>
+                    <span class="step-title">Plugin Marketplace</span>
+                    <span class="step-blurb">How skills move between people and teams.</span>
+                </div>
+                <div class="arc-arrow reveal" data-delay="3">→</div>
+                <div class="arc-step is-caution reveal" data-delay="4">
+                    <span class="step-num">03 · QUESTION</span>
+                    <span class="step-title">MCP by Default</span>
+                    <span class="step-blurb">When you should <em>not</em> reach for MCP.</span>
+                </div>
+                <div class="arc-arrow reveal" data-delay="4">→</div>
+                <div class="arc-step reveal" data-delay="5">
+                    <span class="step-num">04 · EXTEND</span>
+                    <span class="step-title">MCP Apps</span>
+                    <span class="step-blurb">When MCP <em>is</em> right — now with UI.</span>
+                </div>
+            </div>
+            <p class="reveal" data-delay="6" style="margin-top: clamp(1rem, 3vh, 2rem); color: var(--ink-dim); font-size: clamp(0.85rem, 1.4vw, 1.1rem);">
+                Two demos along the way — one to validate skills, one to motivate a migration we haven't started yet.
+            </p>
+        </div>
+        <div class="slide-meta">
+            <span class="num">03</span>
+            <span class="sep">/</span>
+            <span>The Arc</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 4 — SECTION HEADER: AGENT SKILLS
+         ======================================================== -->
+    <section class="slide section-slide" data-section="Skills">
+        <div class="grid-bg"></div>
+        <div class="huge-num reveal-blur">01<span class="slash">/</span></div>
+        <div class="slide-content">
+            <div class="section-ring reveal"><span class="ring ring--trial ring--big">Trial · Techniques</span></div>
+            <h2 class="reveal" data-delay="1">Agent Skills.</h2>
+            <p class="section-desc reveal" data-delay="2">
+                An open standard for packaging instructions, scripts, and resources — and only loading them when the agent actually needs them.
+            </p>
+        </div>
+        <div class="slide-meta">
+            <span class="num">04</span>
+            <span class="sep">/</span>
+            <span>Skills</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 5 — WHAT IS A SKILL
+         ======================================================== -->
+    <section class="slide" data-section="Skills">
+        <div class="slide-tag">Skills · Anatomy</div>
+        <div class="slide-content">
+            <h2 class="reveal">A skill is a folder.</h2>
+            <p class="reveal" data-delay="1" style="color:var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.2rem); max-width: 56ch;">
+                Frontmatter, a body of instructions, and whatever scripts or references the agent might need to do the job.
+            </p>
+            <div class="two-col" style="margin-top: var(--content-gap);">
+                <div class="col reveal" data-delay="2">
+                    <div class="code-label">SKILL.md</div>
+                    <pre class="code"><span class="c">---</span>
+<span class="k">name</span>: timesheet-recap
+<span class="k">description</span>: Recap what I worked
+  on this pay period by searching
+  Slack &amp; Outlook, then draft a
+  timesheet entry I can review.
+<span class="c">---</span>
+
+<span class="c"># Timesheet Recap</span>
+
+When the user asks what they
+worked on, search Slack DMs
+and Outlook calendar for the
+active pay period...</pre>
+                </div>
+                <div class="col reveal" data-delay="3">
+                    <div class="code-label">Folder</div>
+                    <pre class="code"><span class="dir">timesheet-recap/</span>
+├── SKILL.md          <span class="c"># the prompt</span>
+├── scripts/
+│   └── pay_period.py <span class="c"># helper</span>
+└── references/
+    └── eg_categories.md</pre>
+                    <p style="margin-top: clamp(0.5rem, 1.5vh, 1rem); color: var(--ink-dim); font-size: clamp(0.75rem, 1.2vw, 0.95rem); line-height: 1.5;">
+                        Only the <span class="mono" style="color:var(--neon);">description</span> ships in the agent's base context. The body and files load <em style="color:var(--ink);">when the skill matches</em> — same format in Claude Code, the API, <em style="color:var(--ink);">and Cowork</em>.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">05</span>
+            <span class="sep">/</span>
+            <span>Skills</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 6 — WHY SKILLS
+         ======================================================== -->
+    <section class="slide" data-section="Skills">
+        <div class="slide-tag">Skills · Why it matters</div>
+        <div class="slide-content">
+            <h2 class="reveal">Progressive disclosure for agents.</h2>
+            <p class="reveal" data-delay="1" style="color:var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.2rem); max-width: 56ch;">
+                Skills solve the same problem libraries solved for code: you don't load every function into memory just in case.
+            </p>
+            <ul class="bullets reveal" data-delay="2" style="margin-top: var(--content-gap); max-width: 70ch;">
+                <li>Tokens stay cheap — instructions only enter context when relevant.</li>
+                <li>You can ship dozens of skills without poisoning the context window.</li>
+                <li>The body can include scripts the agent <em>runs</em>, not just text it reads.</li>
+                <li>It's a portable standard — the same SKILL.md folder works across Claude Code, Anthropic API, plus other tools picking up the format.</li>
+            </ul>
+            <div class="checklist reveal" data-delay="3">
+                <h3>The catch (Thoughtworks calls this out)</h3>
+                <ul>
+                    <li>Unreviewed third-party skills = supply chain risk. A SKILL.md can ship arbitrary scripts. Review what you install.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">06</span>
+            <span class="sep">/</span>
+            <span>Skills</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 7 — DEMO 1: TIMESHEET HELPER
+         ======================================================== -->
+    <section class="slide demo-slide" data-section="Skills">
+        <div class="grid-bg"></div>
+        <div class="slide-content">
+            <span class="demo-badge reveal">Demo · 01</span>
+            <h2 class="reveal" data-delay="1"><em>timesheet-recap</em> — a Cowork skill, not an MCP server.</h2>
+            <div class="demo-grid">
+                <div class="demo-card reveal" data-delay="2">
+                    <div class="card-label">What it does</div>
+                    <p class="card-body">
+                        Built in <strong style="color:var(--ink);">Claude Cowork</strong>. Looks at my Slack DMs and Outlook calendar for the current pay period, summarizes what I worked on, drafts a timesheet entry to review.
+                    </p>
+                </div>
+                <div class="demo-card reveal" data-delay="3">
+                    <div class="card-label">Why a skill</div>
+                    <p class="card-body">
+                        No new server. No OAuth flow. Just instructions + a small script. Slack &amp; Outlook are already reachable via MCP — the skill <em style="color:var(--neon);">composes</em> what's there.
+                    </p>
+                </div>
+                <div class="demo-card reveal" data-delay="4">
+                    <div class="card-label">Watch for</div>
+                    <p class="card-body">
+                        The skill activates from its <span class="mono" style="color:var(--neon);">description</span> — I never say <span class="mono">"use timesheet-recap"</span>. I ask what I did this pay period.
+                    </p>
+                </div>
+                <div class="demo-card reveal" data-delay="5">
+                    <div class="card-label">Status</div>
+                    <p class="card-body">
+                        Personal use today. Not yet shared — but Cowork on a team plan can fix that. Section 02.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">07</span>
+            <span class="sep">/</span>
+            <span>Demo 01</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 8 — SECTION HEADER: PLUGIN MARKETPLACE
+         ======================================================== -->
+    <section class="slide section-slide" data-section="Marketplace">
+        <div class="grid-bg"></div>
+        <div class="huge-num reveal-blur">02<span class="slash">/</span></div>
+        <div class="slide-content">
+            <div class="section-ring reveal"><span class="ring ring--trial ring--big">Trial · Tools</span></div>
+            <h2 class="reveal" data-delay="1">Plugin Marketplace.</h2>
+            <p class="section-desc reveal" data-delay="2">
+                A Git repo + a manifest. That's how teams stop sharing skills as zip files in DMs.
+            </p>
+        </div>
+        <div class="slide-meta">
+            <span class="num">08</span>
+            <span class="sep">/</span>
+            <span>Marketplace</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 9 — WHAT MARKETPLACES ARE
+         ======================================================== -->
+    <section class="slide" data-section="Marketplace">
+        <div class="slide-tag">Marketplace · Mechanism</div>
+        <div class="slide-content">
+            <h2 class="reveal">Skills, commands, prompts — versioned.</h2>
+            <p class="reveal" data-delay="1" style="color:var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 56ch;">
+                A Claude Code plugin is a bundle. A marketplace is a Git repo of bundles. Anyone can host one — internally, publicly, or both.
+            </p>
+            <div class="two-col" style="margin-top: var(--content-gap);">
+                <div class="col reveal" data-delay="2">
+                    <div class="code-label">marketplace.json</div>
+                    <pre class="code">{
+  <span class="k">"name"</span>: <span class="s">"eg-claude-plugins"</span>,
+  <span class="k">"owner"</span>: <span class="s">"e-gineering"</span>,
+  <span class="k">"plugins"</span>: [
+    {
+      <span class="k">"name"</span>: <span class="s">"timesheet"</span>,
+      <span class="k">"source"</span>: <span class="s">"./plugins/timesheet"</span>,
+      <span class="k">"version"</span>: <span class="s">"0.2.0"</span>
+    }
+  ]
+}</pre>
+                </div>
+                <div class="col reveal" data-delay="3">
+                    <ul class="bullets">
+                        <li><span class="mono" style="color:var(--neon);">/plugin marketplace add &lt;repo&gt;</span> — point Claude Code at a Git URL.</li>
+                        <li><span class="mono" style="color:var(--neon);">/plugin install timesheet</span> — sync the bundle locally.</li>
+                        <li>Updates are pulls, not copy-paste from Confluence.</li>
+                        <li>A plugin can contain skills <em>and</em> commands <em>and</em> hooks <em>and</em> an MCP server.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">09</span>
+            <span class="sep">/</span>
+            <span>Marketplace</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 10 — REAL EXAMPLE: OBRA/SUPERPOWERS
+         ======================================================== -->
+    <section class="slide" data-section="Marketplace">
+        <div class="slide-tag">Marketplace · In the wild</div>
+        <div class="slide-content">
+            <div class="kicker reveal">A real-world marketplace, found in the wild</div>
+            <h2 class="reveal" data-delay="1">obra/superpowers</h2>
+            <div class="two-col" style="margin-top: var(--content-gap);">
+                <div class="col reveal" data-delay="2">
+                    <p style="font-size: clamp(0.85rem, 1.4vw, 1.1rem); line-height: 1.55; color: var(--ink);">
+                        Jesse Vincent &amp; Prime Radiant's full development methodology, packaged as Claude Code skills. Official Anthropic plugin.
+                    </p>
+                    <ul class="bullets" style="margin-top: var(--content-gap);">
+                        <li>Skills for TDD (RED → GREEN → REFACTOR), debugging, planning, code review.</li>
+                        <li>Subagent-driven workflows with built-in verification.</li>
+                        <li>Install once → every Claude Code session has the methodology baked in.</li>
+                    </ul>
+                </div>
+                <div class="col reveal" data-delay="3">
+                    <div style="background: rgba(232,255,61,0.05); border: 1px solid rgba(232,255,61,0.25); border-radius: 12px; padding: clamp(0.9rem, 2vw, 1.4rem);">
+                        <div class="code-label" style="color: var(--neon);">Why I'm bringing it up</div>
+                        <p style="font-size: clamp(0.8rem, 1.3vw, 1rem); color: var(--ink-dim); line-height: 1.5; margin-top: 0.4em;">
+                            A coworker just sent it to me. That's the marketplace working as intended — a credible third party publishes, we sync, no copy-paste from docs.
+                        </p>
+                        <p class="mono" style="color: var(--electric-soft); font-size: clamp(0.75rem, 1.2vw, 0.95rem); margin-top: clamp(0.6rem, 1.5vh, 1rem);">
+                            github.com/obra/superpowers
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">10</span>
+            <span class="sep">/</span>
+            <span>Marketplace</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 11 — COWORK TEAM-PLAN PUBLISHING (the second path)
+         ======================================================== -->
+    <section class="slide" data-section="Marketplace">
+        <div class="slide-tag">Marketplace · The other path</div>
+        <div class="slide-content">
+            <div class="kicker reveal">Path B · Built into the product</div>
+            <h2 class="reveal" data-delay="1">Cowork on a team plan: publish to your <span style="color:var(--neon);">org directory</span>.</h2>
+            <p class="reveal" data-delay="2" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 60ch;">
+                Same SKILL.md format. Different distribution channel — managed by Anthropic, scoped to your org, no Git repo required.
+            </p>
+            <div class="two-col" style="margin-top: var(--content-gap);">
+                <div class="col reveal" data-delay="3">
+                    <h3 style="color: var(--electric-soft); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">How it works</h3>
+                    <ul class="bullets" style="margin-top: var(--element-gap);">
+                        <li>Build the skill in Cowork (or upload an existing SKILL.md folder).</li>
+                        <li>Share with a colleague, <em style="color:var(--ink);">or</em> publish to the org directory.</li>
+                        <li>Anyone in the org finds it and installs in one click.</li>
+                        <li>You push an update → everyone gets it automatically.</li>
+                    </ul>
+                </div>
+                <div class="col reveal" data-delay="4">
+                    <h3 style="color: var(--neon); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">Why it complements the radar entry</h3>
+                    <ul class="bullets" style="margin-top: var(--element-gap);">
+                        <li><strong style="color:var(--ink);">Git marketplace</strong> — open, portable, public-or-private, works for Claude Code.</li>
+                        <li><strong style="color:var(--ink);">Cowork org directory</strong> — managed, internal-only, propagates updates without Git plumbing.</li>
+                        <li>Same SKILL.md. Pick the channel that fits the audience.</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="reveal" data-delay="5" style="margin-top: clamp(0.6rem, 1.5vh, 1rem); color: var(--ink-faint); font-size: clamp(0.72rem, 1.05vw, 0.85rem); font-style: italic;">
+                Requires Team or Enterprise plan. Org owner enables Code execution + File creation in capabilities first.
+            </p>
+        </div>
+        <div class="slide-meta">
+            <span class="num">11</span>
+            <span class="sep">/</span>
+            <span>Marketplace</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 12 — MY PLAN: BUNDLE TIMESHEET-RECAP + EG MCP
+         ======================================================== -->
+    <section class="slide" data-section="Marketplace">
+        <div class="slide-tag">Marketplace · Where this is going for us</div>
+        <div class="slide-content">
+            <div class="kicker reveal">Plan</div>
+            <h2 class="reveal" data-delay="1">One plugin. A skill <span style="color:var(--neon);">and</span> an MCP server.</h2>
+            <div class="two-col" style="margin-top: var(--content-gap);">
+                <div class="col reveal" data-delay="2">
+                    <div class="plugin-tree">
+<span class="root">eg-timesheet/</span>
+├── plugin.json
+├── skills/
+│   └── <span class="skill">timesheet-recap/</span>
+│       └── SKILL.md
+└── mcp/
+    └── <span class="mcp">eg-mcp.json</span>
+        <span class="annotation"># existing server,</span>
+        <span class="annotation"># bundled in</span></div>
+                </div>
+                <div class="col reveal" data-delay="3">
+                    <ul class="bullets">
+                        <li><strong style="color:var(--ink);">The skill drafts</strong> — researches your Slack + Outlook, writes the entry.</li>
+                        <li><strong style="color:var(--ink);">The MCP server posts</strong> — <span class="mono" style="color:var(--neon);">log_time()</span> hits our internal API.</li>
+                        <li>One install on day one. Both halves arrive together.</li>
+                    </ul>
+                    <p style="margin-top: var(--content-gap); color: var(--ink-dim); font-size: clamp(0.8rem, 1.3vw, 1rem); line-height: 1.5;">
+                        First stop: the Cowork org directory. Maybe later: a public marketplace if we open-source it.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">12</span>
+            <span class="sep">/</span>
+            <span>Marketplace</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 12 — SECTION HEADER: MCP BY DEFAULT (CAUTION)
+         ======================================================== -->
+    <section class="slide section-slide caution" data-section="Caution">
+        <div class="stripes"></div>
+        <div class="huge-num reveal-blur">03<span class="slash">/</span></div>
+        <div class="slide-content">
+            <div class="section-ring reveal"><span class="ring ring--caution ring--big">Caution · Techniques</span></div>
+            <h2 class="reveal" data-delay="1">MCP by Default.</h2>
+            <p class="section-desc reveal" data-delay="2">
+                Thoughtworks is putting a hand up. <em style="color: var(--hot);">Not every agent integration needs to be a protocol.</em>
+            </p>
+        </div>
+        <div class="slide-meta">
+            <span class="num">13</span>
+            <span class="sep">/</span>
+            <span>Caution</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 13 — THE PUNCHLINE QUOTE
+         ======================================================== -->
+    <section class="slide" data-section="Caution" style="background: radial-gradient(ellipse 70% 60% at 100% 0%, rgba(255,61,127,0.18) 0%, transparent 60%), linear-gradient(180deg, #150708 0%, #1a0a10 100%);">
+        <div class="slide-tag" style="color: rgba(255,61,127,0.6);">Caution · The quote</div>
+        <div class="slide-content" style="justify-content: center;">
+            <p class="pull-quote reveal">
+                <span class="open">"</span>Almost everything achievable with MCP can be handled by a <em>CLI tool</em> instead.<span style="color: var(--hot);">"</span>
+            </p>
+            <p class="quote-attr reveal" data-delay="2">— Thoughtworks Technology Radar, Vol 34</p>
+        </div>
+        <div class="slide-meta">
+            <span class="num">14</span>
+            <span class="sep">/</span>
+            <span>Caution</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 14 — ABSTRACTION TAX + WHEN MCP IS RIGHT
+         ======================================================== -->
+    <section class="slide" data-section="Caution" style="background: radial-gradient(ellipse 60% 50% at 0% 100%, rgba(255,61,127,0.10) 0%, transparent 60%), linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);">
+        <div class="slide-tag">Caution · When to reach for MCP</div>
+        <div class="slide-content">
+            <h2 class="reveal">The abstraction tax is real.</h2>
+            <p class="reveal" data-delay="1" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 60ch;">
+                Every protocol layer between agent and API costs fidelity. Complex APIs <em style="color:var(--hot);">compound</em> the loss.
+            </p>
+            <div class="two-col" style="margin-top: var(--content-gap);">
+                <div class="col reveal" data-delay="2">
+                    <h3 style="color: var(--hot); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">Skip MCP when</h3>
+                    <ul class="bullets" style="margin-top: var(--element-gap);">
+                        <li>A CLI with <span class="mono">--help</span>, JSON output, and clear exit codes already exists.</li>
+                        <li>A skill with a small script will do the job.</li>
+                        <li>Only one tenant, one team, one machine.</li>
+                    </ul>
+                </div>
+                <div class="col reveal" data-delay="3">
+                    <h3 style="color: var(--electric-soft); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">MCP earns its place when</h3>
+                    <ul class="bullets" style="margin-top: var(--element-gap);">
+                        <li>You need <strong style="color:var(--ink);">OAuth boundaries</strong> (multi-user, governed access).</li>
+                        <li>You need <strong style="color:var(--ink);">structured tool contracts</strong> across many clients.</li>
+                        <li>You need <strong style="color:var(--ink);">multi-tenant governance</strong> from one server.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">15</span>
+            <span class="sep">/</span>
+            <span>Caution</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 15 — BRIDGE: ...AND WHEN IT IS RIGHT, NOW IT HAS UI
+         ======================================================== -->
+    <section class="slide section-slide" data-section="MCP Apps">
+        <div class="grid-bg"></div>
+        <div class="huge-num reveal-blur">04<span class="slash">/</span></div>
+        <div class="slide-content">
+            <div class="section-ring reveal"><span class="ring ring--assess ring--big">Assess · Platforms</span></div>
+            <h2 class="reveal" data-delay="1">MCP Apps.</h2>
+            <p class="section-desc reveal" data-delay="2">
+                The first official MCP extension. MCP servers can now return <em style="color: var(--neon);">interactive HTML</em> — not just text.
+            </p>
+        </div>
+        <div class="slide-meta">
+            <span class="num">16</span>
+            <span class="sep">/</span>
+            <span>MCP Apps</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 16 — HOW MCP APPS WORK
+         ======================================================== -->
+    <section class="slide" data-section="MCP Apps">
+        <div class="slide-tag">MCP Apps · How it works</div>
+        <div class="slide-content">
+            <h2 class="reveal">A new resource scheme: <span class="mono" style="color: var(--neon);">ui://</span></h2>
+            <p class="reveal" data-delay="1" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 58ch;">
+                Tool returns a UI template + data → host renders it in a sandboxed iframe. Text fallback if the client doesn't support UI.
+            </p>
+            <div class="two-col" style="margin-top: var(--content-gap);">
+                <div class="col reveal" data-delay="2">
+                    <div class="code-label">tools/call response (sketch)</div>
+                    <pre class="code">{
+  <span class="k">"content"</span>: [
+    { <span class="k">"type"</span>: <span class="s">"text"</span>,
+      <span class="k">"text"</span>: <span class="s">"Vacation: 12.5 days left"</span> },
+    { <span class="k">"type"</span>: <span class="s">"resource"</span>,
+      <span class="k">"resource"</span>: {
+        <span class="k">"uri"</span>: <span class="y">"ui://vacation-report"</span>,
+        <span class="k">"mimeType"</span>: <span class="s">"text/html"</span>
+      } }
+  ]
+}</pre>
+                </div>
+                <div class="col reveal" data-delay="3">
+                    <ul class="bullets">
+                        <li><strong style="color:var(--ink);">Bidirectional</strong> — the model can observe user actions inside the iframe.</li>
+                        <li><strong style="color:var(--ink);">Sandboxed</strong> — host controls what the iframe can touch.</li>
+                        <li><strong style="color:var(--ink);">Graceful</strong> — text fallback keeps non-UI clients working.</li>
+                        <li><strong style="color:var(--ink);">Standard</strong> — first official extension. Anthropic + OpenAI + community.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">17</span>
+            <span class="sep">/</span>
+            <span>MCP Apps</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 17 — CLIENTS THAT SUPPORT IT
+         ======================================================== -->
+    <section class="slide" data-section="MCP Apps">
+        <div class="slide-tag">MCP Apps · Where it works</div>
+        <div class="slide-content">
+            <h2 class="reveal">Already shipped in the clients that matter.</h2>
+            <p class="reveal" data-delay="1" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 56ch;">
+                Build the UI once, render in any compliant host. Same MCP server, four front-ends.
+            </p>
+            <div class="client-row">
+                <span class="client-pill reveal" data-delay="2"><span class="dot"></span>Claude</span>
+                <span class="client-pill reveal" data-delay="3"><span class="dot"></span>ChatGPT</span>
+                <span class="client-pill reveal" data-delay="4"><span class="dot"></span>VS Code</span>
+                <span class="client-pill reveal" data-delay="5"><span class="dot"></span>Goose</span>
+            </div>
+            <div class="checklist reveal" data-delay="6" style="margin-top: clamp(1rem, 3vh, 2rem);">
+                <h3>Compare to AG-UI Protocol</h3>
+                <ul>
+                    <li>AG-UI is a separate library bolted on. MCP Apps lives <em style="color:var(--ink);">inside</em> the MCP server — one place to ship behavior + UI.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">18</span>
+            <span class="sep">/</span>
+            <span>MCP Apps</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 18 — DEMO 2: EG MCP MIGRATION
+         ======================================================== -->
+    <section class="slide demo-slide" data-section="MCP Apps">
+        <div class="grid-bg"></div>
+        <div class="slide-content">
+            <span class="demo-badge reveal">Demo · 02</span>
+            <h2 class="reveal" data-delay="1">EG MCP — <em>ChatGPT Apps</em> today, <em>MCP Apps</em> tomorrow.</h2>
+            <div class="demo-grid">
+                <div class="demo-card reveal" data-delay="2">
+                    <div class="card-label">Today</div>
+                    <p class="card-body">
+                        Our internal MCP server renders the handbook, perk wallet, timesheet, and vacation report through the <strong style="color:var(--ink);">ChatGPT Apps SDK</strong>. Works great — in ChatGPT.
+                    </p>
+                </div>
+                <div class="demo-card reveal" data-delay="3">
+                    <div class="card-label">Constraint</div>
+                    <p class="card-body">
+                        The UI is bound to one host. Claude Code can't render it. VS Code can't render it. Anything not-ChatGPT just sees the raw JSON.
+                    </p>
+                </div>
+                <div class="demo-card reveal" data-delay="4">
+                    <div class="card-label">Tomorrow</div>
+                    <p class="card-body">
+                        Same server, MCP Apps resources. Handbook viewer, perk wallet, timesheet — <em style="color:var(--neon);">portable</em>. This talk is partly the motivation to start that migration.
+                    </p>
+                </div>
+                <div class="demo-card reveal" data-delay="5">
+                    <div class="card-label">Watch for</div>
+                    <p class="card-body">
+                        Live: the perk wallet via ChatGPT Apps today. Sketch: what the <span class="mono" style="color:var(--neon);">ui://perk-wallet</span> resource would look like.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-meta">
+            <span class="num">19</span>
+            <span class="sep">/</span>
+            <span>Demo 02</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 19 — THE CASE STUDY (BOTH SIDES)
+         ======================================================== -->
+    <section class="slide" data-section="Wrap">
+        <div class="slide-tag">Wrap · The both-sides case study</div>
+        <div class="slide-content">
+            <div class="kicker reveal">Why this all hangs together</div>
+            <h2 class="reveal" data-delay="1">I'm the case study for <em style="color: var(--neon); font-style: normal;">both</em> sides.</h2>
+            <div class="case-study">
+                <div class="case-side left reveal" data-delay="2">
+                    <span class="case-label">timesheet-helper</span>
+                    <span class="case-title">A skill, not a server.</span>
+                    <p class="case-body">
+                        Could have built it as MCP. Didn't need to. Slack + Outlook were already reachable. A SKILL.md + a small script composed what existed. <strong style="color:var(--ink);">This is "MCP by Default" pushing back, working.</strong>
+                    </p>
+                </div>
+                <div class="case-side right reveal" data-delay="3">
+                    <span class="case-label">EG MCP</span>
+                    <span class="case-title">A server that earns it.</span>
+                    <p class="case-body">
+                        OAuth via Azure OBO. Multi-user, governed. Structured tool contracts. Rich UI in the works. <strong style="color:var(--ink);">This is where MCP — and MCP Apps — pay rent.</strong>
+                    </p>
+                </div>
+            </div>
+            <p class="reveal" data-delay="4" style="margin-top: var(--content-gap); color: var(--ink-dim); text-align: center; font-size: clamp(0.85rem, 1.4vw, 1.1rem); max-width: 60ch; margin-left: auto; margin-right: auto;">
+                And the punchline of the plugin section: <em style="color:var(--ink);">both</em> ship together in one plugin.
+            </p>
+        </div>
+        <div class="slide-meta">
+            <span class="num">20</span>
+            <span class="sep">/</span>
+            <span>Wrap</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE 20 — RECAP / Q&A
+         ======================================================== -->
+    <section class="slide" data-section="Wrap">
+        <div class="grid-bg"></div>
+        <div class="slide-tag">Recap</div>
+        <div class="slide-content">
+            <div class="kicker reveal">Tech Radar Vol 34 · four entries, one arc</div>
+            <h2 class="reveal" data-delay="1">What I want you to take back to your project.</h2>
+            <div class="recap-rings">
+                <div class="recap-item reveal" data-delay="2">
+                    <span class="ring ring--trial">Trial</span>
+                    <span class="recap-name">Agent Skills</span>
+                    <span style="color:var(--ink-dim); font-size: clamp(0.72rem, 1.1vw, 0.85rem); line-height: 1.4;">Default to a skill before you build a server.</span>
+                </div>
+                <div class="recap-item reveal" data-delay="3">
+                    <span class="ring ring--trial">Trial</span>
+                    <span class="recap-name">Plugin Marketplace</span>
+                    <span style="color:var(--ink-dim); font-size: clamp(0.72rem, 1.1vw, 0.85rem); line-height: 1.4;">Git repo or Cowork org directory — pick the channel, stop sharing skills in DMs.</span>
+                </div>
+                <div class="recap-item reveal" data-delay="4">
+                    <span class="ring ring--caution">Caution</span>
+                    <span class="recap-name">MCP by Default</span>
+                    <span style="color:var(--ink-dim); font-size: clamp(0.72rem, 1.1vw, 0.85rem); line-height: 1.4;">Ask "could a CLI or a skill do this?" before reaching for the protocol.</span>
+                </div>
+                <div class="recap-item reveal" data-delay="5">
+                    <span class="ring ring--assess">Assess</span>
+                    <span class="recap-name">MCP Apps</span>
+                    <span style="color:var(--ink-dim); font-size: clamp(0.72rem, 1.1vw, 0.85rem); line-height: 1.4;">When MCP is right, UI is no longer a separate problem.</span>
+                </div>
+            </div>
+            <p class="reveal" data-delay="6" style="margin-top: clamp(1rem, 3vh, 2rem); text-align: center; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem, 3vw, 2.2rem); color: var(--neon);">
+                Questions?
+            </p>
+        </div>
+        <div class="slide-meta">
+            <span class="num">21</span>
+            <span class="sep">/</span>
+            <span>Wrap</span>
+        </div>
+    </section>
+
+    <!-- ========================================================
+         SLIDE PRESENTATION CONTROLLER
+         ======================================================== -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = Array.from(document.querySelectorAll('.slide'));
+                this.progressBar = document.getElementById('progressBar');
+                this.currentSlide = 0;
+
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.updateProgress();
+
+                // Trigger initial reveal for slide 1 (Intersection Observer fires async)
+                if (this.slides[0]) this.slides[0].classList.add('visible');
+            }
+
+            // Add .visible class as slides enter viewport — triggers CSS animations
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            this.currentSlide = this.slides.indexOf(entry.target);
+                            this.updateProgress();
+                        }
+                    });
+                }, { threshold: 0.4 });
+                this.slides.forEach(slide => observer.observe(slide));
+            }
+
+            // Arrow keys, Space, Page Up/Down, Home/End
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    switch (e.key) {
+                        case 'ArrowDown':
+                        case 'ArrowRight':
+                        case ' ':
+                        case 'PageDown':
+                            e.preventDefault();
+                            this.goTo(this.currentSlide + 1);
+                            break;
+                        case 'ArrowUp':
+                        case 'ArrowLeft':
+                        case 'PageUp':
+                            e.preventDefault();
+                            this.goTo(this.currentSlide - 1);
+                            break;
+                        case 'Home':
+                            e.preventDefault();
+                            this.goTo(0);
+                            break;
+                        case 'End':
+                            e.preventDefault();
+                            this.goTo(this.slides.length - 1);
+                            break;
+                    }
+                });
+            }
+
+            // Basic touch/swipe for mobile
+            setupTouchNav() {
+                let startY = 0;
+                document.addEventListener('touchstart', (e) => {
+                    startY = e.touches[0].clientY;
+                }, { passive: true });
+                document.addEventListener('touchend', (e) => {
+                    const dy = e.changedTouches[0].clientY - startY;
+                    if (Math.abs(dy) < 50) return;
+                    this.goTo(this.currentSlide + (dy < 0 ? 1 : -1));
+                }, { passive: true });
+            }
+
+            goTo(idx) {
+                if (idx < 0 || idx >= this.slides.length) return;
+                this.slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            updateProgress() {
+                const pct = ((this.currentSlide + 1) / this.slides.length) * 100;
+                this.progressBar.style.width = pct + '%';
+            }
+        }
+
+        new SlidePresentation();
+    </script>
+</body>
+</html>
