@@ -687,6 +687,8 @@
             border-radius: 10px;
             padding: clamp(0.9rem, 2vw, 1.4rem);
             color: var(--ink-dim);
+            white-space: pre;
+            overflow: hidden;
         }
         .plugin-tree .root { color: var(--neon); font-weight: 700; }
         .plugin-tree .dir { color: var(--electric-soft); }
@@ -869,12 +871,9 @@
             <h1 class="reveal" data-delay="1">
                 Agents in 2026:<br>
                 Skills, Plugins<br>
-                <span class="accent">&amp; MCP</span>
+                &amp; MCP
             </h1>
-            <p class="subtitle reveal" data-delay="2">
-                Four radar entries, one story — and two demos that should make you suspicious of the obvious answer.
-            </p>
-            <div class="byline reveal" data-delay="3">
+            <div class="byline reveal" data-delay="2" style="margin-top: calc(var(--content-gap) * 2);">
                 <strong>Brad Russell</strong>
                 <span>E-gineering · Tech Radar Talk</span>
             </div>
@@ -887,87 +886,44 @@
     </section>
 
     <!-- ========================================================
-         SLIDE 2 — THE 4 RADAR ENTRIES
-         ======================================================== -->
-    <section class="slide" data-section="Intro">
-        <div class="grid-bg"></div>
-        <div class="slide-tag">The Map</div>
-        <div class="slide-content">
-            <div class="kicker reveal">Four entries · Vol 34</div>
-            <h2 class="reveal" data-delay="1">These four are <em style="color:var(--neon); font-style:normal;">one story</em>.</h2>
-            <div class="radar-grid">
-                <div class="radar-card reveal" data-delay="2">
-                    <span class="card-cat">Techniques</span>
-                    <h3>Agent Skills</h3>
-                    <span class="ring ring--trial">Trial</span>
-                    <p class="card-desc">Modular instructions + scripts, loaded on demand.</p>
-                </div>
-                <div class="radar-card reveal" data-delay="3">
-                    <span class="card-cat">Tools</span>
-                    <h3>Plugin Marketplace</h3>
-                    <span class="ring ring--trial">Trial</span>
-                    <p class="card-desc">Git-based distribution for skills, commands, prompts.</p>
-                </div>
-                <div class="radar-card reveal" data-delay="4">
-                    <span class="card-cat">Techniques</span>
-                    <h3>MCP by Default</h3>
-                    <span class="ring ring--caution">Caution</span>
-                    <p class="card-desc">Stop reaching for MCP when a CLI would do.</p>
-                </div>
-                <div class="radar-card reveal" data-delay="5">
-                    <span class="card-cat">Platforms</span>
-                    <h3>MCP Apps</h3>
-                    <span class="ring ring--assess">Assess</span>
-                    <p class="card-desc">Interactive UI rendered inside an MCP response.</p>
-                </div>
-            </div>
-        </div>
-        <div class="slide-meta">
-            <span class="num">02</span>
-            <span class="sep">/</span>
-            <span>The Map</span>
-        </div>
-    </section>
-
-    <!-- ========================================================
-         SLIDE 3 — THE NARRATIVE ARC
+         SLIDE 2 — THE ARC (combined map + arc)
          ======================================================== -->
     <section class="slide" data-section="Intro">
         <div class="slide-tag">The Arc</div>
         <div class="slide-content">
-            <div class="kicker reveal">How we'll walk through them</div>
-            <h2 class="reveal" data-delay="1">Build it. Share it. <span style="color:var(--hot);">Question it.</span> Extend it.</h2>
-            <div class="arc-row">
+            <h2 class="reveal">Build it. Share it. <span style="color:var(--hot);">Question it.</span> Extend it.</h2>
+            <div class="arc-row" style="margin-top: clamp(1.5rem, 4vh, 2.5rem);">
                 <div class="arc-step reveal" data-delay="2">
                     <span class="step-num">01 · BUILD</span>
                     <span class="step-title">Agent Skills</span>
-                    <span class="step-blurb">The building block. Modular, on-demand context.</span>
+                    <span class="ring ring--trial">Trial · Techniques</span>
+                    <span class="step-blurb">Modular, on-demand context.</span>
                 </div>
                 <div class="arc-arrow reveal" data-delay="2">→</div>
                 <div class="arc-step reveal" data-delay="3">
                     <span class="step-num">02 · SHARE</span>
                     <span class="step-title">Plugin Marketplace</span>
-                    <span class="step-blurb">How skills move between people and teams.</span>
+                    <span class="ring ring--trial">Trial · Tools</span>
+                    <span class="step-blurb">Versioned distribution for skills, commands, prompts.</span>
                 </div>
                 <div class="arc-arrow reveal" data-delay="3">→</div>
                 <div class="arc-step is-caution reveal" data-delay="4">
                     <span class="step-num">03 · QUESTION</span>
                     <span class="step-title">MCP by Default</span>
-                    <span class="step-blurb">When you should <em>not</em> reach for MCP.</span>
+                    <span class="ring ring--caution">Caution · Techniques</span>
+                    <span class="step-blurb">Stop reaching for MCP when a CLI would do.</span>
                 </div>
                 <div class="arc-arrow reveal" data-delay="4">→</div>
                 <div class="arc-step reveal" data-delay="5">
                     <span class="step-num">04 · EXTEND</span>
                     <span class="step-title">MCP Apps</span>
-                    <span class="step-blurb">When MCP <em>is</em> right — now with UI.</span>
+                    <span class="ring ring--assess">Assess · Platforms</span>
+                    <span class="step-blurb">Interactive UI inside an MCP response.</span>
                 </div>
             </div>
-            <p class="reveal" data-delay="6" style="margin-top: clamp(1rem, 3vh, 2rem); color: var(--ink-dim); font-size: clamp(0.85rem, 1.4vw, 1.1rem);">
-                Two demos along the way — one to validate skills, one to motivate a migration we haven't started yet.
-            </p>
         </div>
         <div class="slide-meta">
-            <span class="num">03</span>
+            <span class="num">02</span>
             <span class="sep">/</span>
             <span>The Arc</span>
         </div>
@@ -987,7 +943,7 @@
             </p>
         </div>
         <div class="slide-meta">
-            <span class="num">04</span>
+            <span class="num">03</span>
             <span class="sep">/</span>
             <span>Skills</span>
         </div>
@@ -1036,7 +992,7 @@ active pay period...</pre>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">05</span>
+            <span class="num">04</span>
             <span class="sep">/</span>
             <span>Skills</span>
         </div>
@@ -1066,7 +1022,7 @@ active pay period...</pre>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">06</span>
+            <span class="num">05</span>
             <span class="sep">/</span>
             <span>Skills</span>
         </div>
@@ -1108,7 +1064,7 @@ active pay period...</pre>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">07</span>
+            <span class="num">06</span>
             <span class="sep">/</span>
             <span>Demo 01</span>
         </div>
@@ -1128,7 +1084,7 @@ active pay period...</pre>
             </p>
         </div>
         <div class="slide-meta">
-            <span class="num">08</span>
+            <span class="num">07</span>
             <span class="sep">/</span>
             <span>Marketplace</span>
         </div>
@@ -1170,7 +1126,7 @@ active pay period...</pre>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">09</span>
+            <span class="num">08</span>
             <span class="sep">/</span>
             <span>Marketplace</span>
         </div>
@@ -1219,7 +1175,7 @@ active pay period...</pre>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">10</span>
+            <span class="num">09</span>
             <span class="sep">/</span>
             <span>Marketplace</span>
         </div>
@@ -1260,7 +1216,7 @@ active pay period...</pre>
             </p>
         </div>
         <div class="slide-meta">
-            <span class="num">11</span>
+            <span class="num">10</span>
             <span class="sep">/</span>
             <span>Marketplace</span>
         </div>
@@ -1283,9 +1239,7 @@ active pay period...</pre>
 │   └── <span class="skill">timesheet-recap/</span>
 │       └── SKILL.md
 └── mcp/
-    └── <span class="mcp">eg-mcp.json</span>
-        <span class="annotation"># existing server,</span>
-        <span class="annotation"># bundled in</span></div>
+    └── <span class="mcp">eg-mcp.json</span>   <span class="annotation"># existing server, bundled in</span></div>
                 </div>
                 <div class="col reveal" data-delay="3">
                     <ul class="bullets">
@@ -1300,7 +1254,7 @@ active pay period...</pre>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">12</span>
+            <span class="num">11</span>
             <span class="sep">/</span>
             <span>Marketplace</span>
         </div>
@@ -1320,7 +1274,7 @@ active pay period...</pre>
             </p>
         </div>
         <div class="slide-meta">
-            <span class="num">13</span>
+            <span class="num">12</span>
             <span class="sep">/</span>
             <span>Caution</span>
         </div>
@@ -1333,12 +1287,12 @@ active pay period...</pre>
         <div class="slide-tag" style="color: rgba(255,61,127,0.6);">Caution · The quote</div>
         <div class="slide-content" style="justify-content: center;">
             <p class="pull-quote reveal">
-                <span class="open">"</span>Almost everything achievable with MCP can be handled by a <em>CLI tool</em> instead.<span style="color: var(--hot);">"</span>
+                <span class="open">"</span>Almost everything I might achieve with an MCP can be handled by a <em>CLI tool</em> instead.<span style="color: var(--hot);">"</span>
             </p>
-            <p class="quote-attr reveal" data-delay="2">— Thoughtworks Technology Radar, Vol 34</p>
+            <p class="quote-attr reveal" data-delay="2">— Simon Willison · <span style="opacity: 0.7;">featured in Thoughtworks Radar Vol 34</span></p>
         </div>
         <div class="slide-meta">
-            <span class="num">14</span>
+            <span class="num">13</span>
             <span class="sep">/</span>
             <span>Caution</span>
         </div>
@@ -1350,9 +1304,12 @@ active pay period...</pre>
     <section class="slide" data-section="Caution" style="background: radial-gradient(ellipse 60% 50% at 0% 100%, rgba(255,61,127,0.10) 0%, transparent 60%), linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);">
         <div class="slide-tag">Caution · When to reach for MCP</div>
         <div class="slide-content">
-            <h2 class="reveal">The abstraction tax is real.</h2>
+            <h2 class="reveal">The <em style="color:var(--hot); font-style: normal;">abstraction tax</em> is real.</h2>
             <p class="reveal" data-delay="1" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 60ch;">
                 Every protocol layer between agent and API costs fidelity. Complex APIs <em style="color:var(--hot);">compound</em> the loss.
+            </p>
+            <p class="reveal" data-delay="1" style="color: var(--ink-faint); margin-top: 0.4em; font-size: clamp(0.72rem, 1.05vw, 0.85rem); font-style: italic;">
+                "abstraction tax" — Justin Poehnelt
             </p>
             <div class="two-col" style="margin-top: var(--content-gap);">
                 <div class="col reveal" data-delay="2">
@@ -1374,7 +1331,7 @@ active pay period...</pre>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">15</span>
+            <span class="num">14</span>
             <span class="sep">/</span>
             <span>Caution</span>
         </div>
@@ -1394,7 +1351,7 @@ active pay period...</pre>
             </p>
         </div>
         <div class="slide-meta">
-            <span class="num">16</span>
+            <span class="num">15</span>
             <span class="sep">/</span>
             <span>MCP Apps</span>
         </div>
@@ -1436,7 +1393,7 @@ active pay period...</pre>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">17</span>
+            <span class="num">16</span>
             <span class="sep">/</span>
             <span>MCP Apps</span>
         </div>
@@ -1450,7 +1407,7 @@ active pay period...</pre>
         <div class="slide-content">
             <h2 class="reveal">Already shipped in the clients that matter.</h2>
             <p class="reveal" data-delay="1" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 56ch;">
-                Build the UI once, render in any compliant host. Same MCP server, four front-ends.
+                Build the UI once, render in any compliant host.
             </p>
             <div class="client-row">
                 <span class="client-pill reveal" data-delay="2"><span class="dot"></span>Claude</span>
@@ -1466,99 +1423,59 @@ active pay period...</pre>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">18</span>
+            <span class="num">17</span>
             <span class="sep">/</span>
             <span>MCP Apps</span>
         </div>
     </section>
 
     <!-- ========================================================
-         SLIDE 18 — DEMO 2: EG MCP MIGRATION
+         SLIDE 18 — DEMO 2: EXCALIDRAW (live) + EG MCP (next)
          ======================================================== -->
     <section class="slide demo-slide" data-section="MCP Apps">
         <div class="grid-bg"></div>
         <div class="slide-content">
             <span class="demo-badge reveal">Demo · 02</span>
-            <h2 class="reveal" data-delay="1">EG MCP — <em>ChatGPT Apps</em> today, <em>MCP Apps</em> tomorrow.</h2>
+            <h2 class="reveal" data-delay="1"><em>Excalidraw</em> now. <em>EG MCP</em> next.</h2>
             <div class="demo-grid">
+                <!-- LEFT: live, proven, the wow moment -->
                 <div class="demo-card reveal" data-delay="2">
-                    <div class="card-label">Today</div>
+                    <div class="card-label">Live · Excalidraw MCP App</div>
                     <p class="card-body">
-                        Our internal MCP server renders the handbook, perk wallet, timesheet, and vacation report through the <strong style="color:var(--ink);">ChatGPT Apps SDK</strong>. Works great — in ChatGPT.
+                        Official Excalidraw project, remote endpoint at <span class="mono" style="color:var(--neon);">mcp.excalidraw.com</span>. Ask Claude to draw an architecture diagram → it streams into a sandboxed iframe in the chat.
+                    </p>
+                    <p class="card-body" style="margin-top: 0.6em; color: var(--ink-faint); font-size: clamp(0.7rem, 1.1vw, 0.88rem); font-style: italic;">
+                        Yes, the same Excalidraw I covered in a lightning talk a few years ago.
                     </p>
                 </div>
+                <!-- RIGHT: aspirational, our internal plan -->
                 <div class="demo-card reveal" data-delay="3">
-                    <div class="card-label">Constraint</div>
+                    <div class="card-label">Next · EG MCP migration</div>
                     <p class="card-body">
-                        The UI is bound to one host. Claude Code can't render it. VS Code can't render it. Anything not-ChatGPT just sees the raw JSON.
+                        Today: our EG MCP renders handbook, perk wallet, timesheet, vacation via the <strong style="color:var(--ink);">ChatGPT Apps SDK</strong> — bound to one host.
                     </p>
-                </div>
-                <div class="demo-card reveal" data-delay="4">
-                    <div class="card-label">Tomorrow</div>
-                    <p class="card-body">
-                        Same server, MCP Apps resources. Handbook viewer, perk wallet, timesheet — <em style="color:var(--neon);">portable</em>. This talk is partly the motivation to start that migration.
-                    </p>
-                </div>
-                <div class="demo-card reveal" data-delay="5">
-                    <div class="card-label">Watch for</div>
-                    <p class="card-body">
-                        Live: the perk wallet via ChatGPT Apps today. Sketch: what the <span class="mono" style="color:var(--neon);">ui://perk-wallet</span> resource would look like.
+                    <p class="card-body" style="margin-top: 0.6em;">
+                        Plan: same server, <span class="mono" style="color:var(--neon);">ui://</span> resources — portable to every compliant host. This talk is the motivation to start.
                     </p>
                 </div>
             </div>
         </div>
         <div class="slide-meta">
-            <span class="num">19</span>
+            <span class="num">18</span>
             <span class="sep">/</span>
             <span>Demo 02</span>
         </div>
     </section>
 
     <!-- ========================================================
-         SLIDE 19 — THE CASE STUDY (BOTH SIDES)
-         ======================================================== -->
-    <section class="slide" data-section="Wrap">
-        <div class="slide-tag">Wrap · The both-sides case study</div>
-        <div class="slide-content">
-            <div class="kicker reveal">Why this all hangs together</div>
-            <h2 class="reveal" data-delay="1">I'm the case study for <em style="color: var(--neon); font-style: normal;">both</em> sides.</h2>
-            <div class="case-study">
-                <div class="case-side left reveal" data-delay="2">
-                    <span class="case-label">timesheet-helper</span>
-                    <span class="case-title">A skill, not a server.</span>
-                    <p class="case-body">
-                        Could have built it as MCP. Didn't need to. Slack + Outlook were already reachable. A SKILL.md + a small script composed what existed. <strong style="color:var(--ink);">This is "MCP by Default" pushing back, working.</strong>
-                    </p>
-                </div>
-                <div class="case-side right reveal" data-delay="3">
-                    <span class="case-label">EG MCP</span>
-                    <span class="case-title">A server that earns it.</span>
-                    <p class="case-body">
-                        OAuth via Azure OBO. Multi-user, governed. Structured tool contracts. Rich UI in the works. <strong style="color:var(--ink);">This is where MCP — and MCP Apps — pay rent.</strong>
-                    </p>
-                </div>
-            </div>
-            <p class="reveal" data-delay="4" style="margin-top: var(--content-gap); color: var(--ink-dim); text-align: center; font-size: clamp(0.85rem, 1.4vw, 1.1rem); max-width: 60ch; margin-left: auto; margin-right: auto;">
-                And the punchline of the plugin section: <em style="color:var(--ink);">both</em> ship together in one plugin.
-            </p>
-        </div>
-        <div class="slide-meta">
-            <span class="num">20</span>
-            <span class="sep">/</span>
-            <span>Wrap</span>
-        </div>
-    </section>
-
-    <!-- ========================================================
-         SLIDE 20 — RECAP / Q&A
+         SLIDE 19 — RECAP / Q&A
          ======================================================== -->
     <section class="slide" data-section="Wrap">
         <div class="grid-bg"></div>
         <div class="slide-tag">Recap</div>
-        <div class="slide-content">
-            <div class="kicker reveal">Tech Radar Vol 34 · four entries, one arc</div>
-            <h2 class="reveal" data-delay="1">What I want you to take back to your project.</h2>
-            <div class="recap-rings">
+        <div class="slide-content" style="text-align: center; align-items: center;">
+            <h2 class="reveal">Takeaways.</h2>
+            <div class="recap-rings" style="justify-content: center; align-items: stretch;">
                 <div class="recap-item reveal" data-delay="2">
                     <span class="ring ring--trial">Trial</span>
                     <span class="recap-name">Agent Skills</span>
@@ -1567,7 +1484,7 @@ active pay period...</pre>
                 <div class="recap-item reveal" data-delay="3">
                     <span class="ring ring--trial">Trial</span>
                     <span class="recap-name">Plugin Marketplace</span>
-                    <span style="color:var(--ink-dim); font-size: clamp(0.72rem, 1.1vw, 0.85rem); line-height: 1.4;">Git repo or Cowork org directory — pick the channel, stop sharing skills in DMs.</span>
+                    <span style="color:var(--ink-dim); font-size: clamp(0.72rem, 1.1vw, 0.85rem); line-height: 1.4;">Git repo or Cowork org directory — stop sharing skills in DMs.</span>
                 </div>
                 <div class="recap-item reveal" data-delay="4">
                     <span class="ring ring--caution">Caution</span>
@@ -1580,12 +1497,12 @@ active pay period...</pre>
                     <span style="color:var(--ink-dim); font-size: clamp(0.72rem, 1.1vw, 0.85rem); line-height: 1.4;">When MCP is right, UI is no longer a separate problem.</span>
                 </div>
             </div>
-            <p class="reveal" data-delay="6" style="margin-top: clamp(1rem, 3vh, 2rem); text-align: center; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem, 3vw, 2.2rem); color: var(--neon);">
+            <p class="reveal" data-delay="6" style="margin-top: clamp(1rem, 3vh, 2rem); font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem, 3vw, 2.2rem); color: var(--neon);">
                 Questions?
             </p>
         </div>
         <div class="slide-meta">
-            <span class="num">21</span>
+            <span class="num">19</span>
             <span class="sep">/</span>
             <span>Wrap</span>
         </div>
