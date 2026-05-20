@@ -1177,33 +1177,43 @@ active pay period...</pre>
     </section>
 
     <!-- ========================================================
-         SLIDE 10 — REAL EXAMPLE: OBRA/SUPERPOWERS
+         SLIDE 10 — REAL EXAMPLES: OBRA/SUPERPOWERS + DOTNET/SKILLS
          ======================================================== -->
     <section class="slide" data-section="Marketplace">
         <div class="slide-tag">Marketplace · In the wild</div>
         <div class="slide-content">
-            <div class="kicker reveal">A real-world marketplace, found in the wild</div>
-            <h2 class="reveal" data-delay="1">obra/superpowers</h2>
+            <h2 class="reveal">Marketplaces, in the wild.</h2>
             <div class="two-col" style="margin-top: var(--content-gap);">
+                <!-- LEFT: community/independent-published example -->
                 <div class="col reveal" data-delay="2">
-                    <p style="font-size: clamp(0.85rem, 1.4vw, 1.1rem); line-height: 1.55; color: var(--ink);">
-                        Jesse Vincent &amp; Prime Radiant's full development methodology, packaged as Claude Code skills. Official Anthropic plugin.
-                    </p>
-                    <ul class="bullets" style="margin-top: var(--content-gap);">
-                        <li>Skills for TDD (RED → GREEN → REFACTOR), debugging, planning, code review.</li>
-                        <li>Subagent-driven workflows with built-in verification.</li>
-                        <li>Install once → every Claude Code session has the methodology baked in.</li>
-                    </ul>
+                    <div style="background: rgba(232,255,61,0.05); border: 1px solid rgba(232,255,61,0.25); border-radius: 12px; padding: clamp(0.9rem, 2vw, 1.4rem); height: 100%;">
+                        <div class="code-label" style="color: var(--neon);">Community / independent</div>
+                        <p class="mono" style="color: var(--ink); font-size: clamp(0.85rem, 1.5vw, 1.15rem); font-weight: 500; margin-top: 0.4em;">
+                            obra/superpowers
+                        </p>
+                        <p style="margin-top: 0.5em; color: var(--ink-dim); font-size: clamp(0.75rem, 1.2vw, 0.95rem); line-height: 1.5;">
+                            Jesse Vincent's dev methodology — TDD, debugging, planning, code review. Official Anthropic plugin.
+                        </p>
+                        <ul class="bullets" style="margin-top: clamp(0.5rem, 1.5vh, 1rem); font-size: clamp(0.72rem, 1.15vw, 0.92rem);">
+                            <li><span class="mono" style="color:var(--neon);">/plugin marketplace add obra/superpowers</span></li>
+                            <li>Subagent workflows with built-in verification.</li>
+                        </ul>
+                    </div>
                 </div>
+                <!-- RIGHT: vendor-published example -->
                 <div class="col reveal" data-delay="3">
-                    <div style="background: rgba(232,255,61,0.05); border: 1px solid rgba(232,255,61,0.25); border-radius: 12px; padding: clamp(0.9rem, 2vw, 1.4rem);">
-                        <div class="code-label" style="color: var(--neon);">Why I'm bringing it up</div>
-                        <p style="font-size: clamp(0.8rem, 1.3vw, 1rem); color: var(--ink-dim); line-height: 1.5; margin-top: 0.4em;">
-                            A coworker just sent it to me. That's the marketplace working as intended — a credible third party publishes, we sync, no copy-paste from docs.
+                    <div style="background: rgba(42,109,255,0.07); border: 1px solid rgba(42,109,255,0.3); border-radius: 12px; padding: clamp(0.9rem, 2vw, 1.4rem); height: 100%;">
+                        <div class="code-label" style="color: var(--electric-soft);">Vendor-official</div>
+                        <p class="mono" style="color: var(--ink); font-size: clamp(0.85rem, 1.5vw, 1.15rem); font-weight: 500; margin-top: 0.4em;">
+                            dotnet/skills
                         </p>
-                        <p class="mono" style="color: var(--electric-soft); font-size: clamp(0.75rem, 1.2vw, 0.95rem); margin-top: clamp(0.6rem, 1.5vh, 1rem);">
-                            github.com/obra/superpowers
+                        <p style="margin-top: 0.5em; color: var(--ink-dim); font-size: clamp(0.75rem, 1.2vw, 0.95rem); line-height: 1.5;">
+                            Microsoft's .NET team. Plugins for ASP.NET, EF, AI, testing, framework upgrades.
                         </p>
+                        <ul class="bullets" style="margin-top: clamp(0.5rem, 1.5vh, 1rem); font-size: clamp(0.72rem, 1.15vw, 0.92rem);">
+                            <li><span class="mono" style="color:var(--electric-soft);">/plugin marketplace add dotnet/skills</span></li>
+                            <li>Works in Claude Code, Cursor, Codex CLI.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
