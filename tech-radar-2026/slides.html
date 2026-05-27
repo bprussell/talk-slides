@@ -1046,19 +1046,20 @@ active pay period...</pre>
                 <div class="demo-card reveal" data-delay="3">
                     <div class="card-label">Why a skill</div>
                     <p class="card-body">
-                        No new server. No OAuth flow. Just instructions + a small script. Slack &amp; Outlook are already reachable via MCP — the skill <em style="color:var(--neon);">composes</em> what's there.
+                        No new server, no auth plumbing of my own. Slack &amp; Outlook are already wired in through Cowork's <strong style="color:var(--ink);">connectors</strong> — the skill just <em style="color:var(--neon);">composes</em> what's there.
                     </p>
                 </div>
+
                 <div class="demo-card reveal" data-delay="4">
                     <div class="card-label">Watch for</div>
                     <p class="card-body">
-                        The skill activates from its <span class="mono" style="color:var(--neon);">description</span> — I never say <span class="mono">"use timesheet-recap"</span>. I ask what I did this pay period.
+                        It auto-activates from its <span class="mono" style="color:var(--neon);">description</span> — I just ask what I did this pay period. The <span class="mono" style="color:var(--neon);">/timesheet-recap</span> slash command is there too if I want to invoke it explicitly.
                     </p>
                 </div>
                 <div class="demo-card reveal" data-delay="5">
                     <div class="card-label">Status</div>
                     <p class="card-body">
-                        Personal use today. Not yet shared — but Cowork on a team plan can fix that. Section 02.
+                        Not a demo prop — I run this <strong style="color:var(--ink);">every pay period</strong> to fill out my real timesheet. (How I got it to all of you: coming up.)
                     </p>
                 </div>
             </div>
@@ -1108,8 +1109,8 @@ active pay period...</pre>
   <span class="k">"owner"</span>: <span class="s">"e-gineering"</span>,
   <span class="k">"plugins"</span>: [
     {
-      <span class="k">"name"</span>: <span class="s">"timesheet"</span>,
-      <span class="k">"source"</span>: <span class="s">"./plugins/timesheet"</span>,
+      <span class="k">"name"</span>: <span class="s">"productivity"</span>,
+      <span class="k">"source"</span>: <span class="s">"./plugins/productivity"</span>,
       <span class="k">"version"</span>: <span class="s">"0.2.0"</span>
     }
   ]
@@ -1118,11 +1119,14 @@ active pay period...</pre>
                 <div class="col reveal" data-delay="3">
                     <ul class="bullets">
                         <li><span class="mono" style="color:var(--neon);">/plugin marketplace add &lt;repo&gt;</span> — point Claude Code at a Git URL.</li>
-                        <li><span class="mono" style="color:var(--neon);">/plugin install timesheet</span> — sync the bundle locally.</li>
+                        <li><span class="mono" style="color:var(--neon);">/plugin install productivity</span> — sync the bundle locally.</li>
                         <li>Updates are pulls, not copy-paste from Confluence.</li>
                         <li>A plugin can contain skills <em>and</em> commands <em>and</em> hooks <em>and</em> an MCP server.</li>
                     </ul>
                 </div>
+            </div>
+            <div class="reveal" data-delay="4" style="margin-top: var(--content-gap); background: rgba(42,109,255,0.08); border-left: 3px solid var(--electric); border-radius: 0 10px 10px 0; padding: clamp(0.6rem, 1.4vw, 1rem) clamp(0.9rem, 2vw, 1.4rem); font-size: clamp(0.78rem, 1.25vw, 1rem); line-height: 1.5; color: var(--ink);">
+                <strong style="color:var(--electric-soft);">Scope check</strong> — project-only skill? Commit it to the repo's <span class="mono" style="color:var(--neon);">.claude/skills/</span>; it ships with the code. Cross-project or org-wide? <em style="color:var(--ink);">That's</em> what a marketplace is for.
             </div>
         </div>
         <div class="slide-meta">
@@ -1187,33 +1191,34 @@ active pay period...</pre>
     <section class="slide" data-section="Marketplace">
         <div class="slide-tag">Marketplace · The other path</div>
         <div class="slide-content">
-            <div class="kicker reveal">Path B · Built into the product</div>
+            <div class="kicker reveal">Built into the product</div>
             <h2 class="reveal" data-delay="1">Cowork on a team plan: publish to your <span style="color:var(--neon);">org directory</span>.</h2>
             <p class="reveal" data-delay="2" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 60ch;">
-                Same SKILL.md format. Different distribution channel — managed by Anthropic, scoped to your org, no Git repo required.
+                Same SKILL.md format. A managed, org-scoped directory — teammates don't add a marketplace by hand; approved plugins just show up.
             </p>
             <div class="two-col" style="margin-top: var(--content-gap);">
                 <div class="col reveal" data-delay="3">
                     <h3 style="color: var(--electric-soft); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">How it works</h3>
                     <ul class="bullets" style="margin-top: var(--element-gap);">
-                        <li>Build the skill in Cowork (or upload an existing SKILL.md folder).</li>
-                        <li>Share with a colleague, <em style="color:var(--ink);">or</em> publish to the org directory.</li>
-                        <li>Anyone in the org finds it and installs in one click.</li>
-                        <li>You push an update → everyone gets it automatically.</li>
+                        <li>Build the skill in Cowork — or bring an existing SKILL.md folder.</li>
+                        <li>Add the plugin to your org's plugins repo.</li>
+                        <li>It shows up in everyone's org directory — one-click install.</li>
+                        <li>Push an update → everyone gets it automatically.</li>
                     </ul>
                 </div>
                 <div class="col reveal" data-delay="4">
                     <h3 style="color: var(--neon); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">Why it complements the radar entry</h3>
                     <ul class="bullets" style="margin-top: var(--element-gap);">
-                        <li><strong style="color:var(--ink);">Git marketplace</strong> — open, portable, public-or-private, works for Claude Code.</li>
-                        <li><strong style="color:var(--ink);">Cowork org directory</strong> — managed, internal-only, propagates updates without Git plumbing.</li>
+                        <li><strong style="color:var(--ink);">Git marketplace</strong> — open, portable, public-or-private, consumers add the repo themselves.</li>
+                        <li><strong style="color:var(--ink);">Cowork org directory</strong> — managed, internal-only; teammates install in a click and updates propagate automatically.</li>
                         <li>Same SKILL.md. Pick the channel that fits the audience.</li>
                     </ul>
                 </div>
             </div>
-            <p class="reveal" data-delay="5" style="margin-top: clamp(0.6rem, 1.5vh, 1rem); color: var(--ink-faint); font-size: clamp(0.72rem, 1.05vw, 0.85rem); font-style: italic;">
-                Requires Team or Enterprise plan. Org owner enables Code execution + File creation in capabilities first.
-            </p>
+            <div class="reveal" data-delay="5" style="margin-top: var(--content-gap); background: rgba(232,255,61,0.06); border-left: 3px solid var(--neon); border-radius: 0 10px 10px 0; padding: clamp(0.7rem, 1.5vw, 1.1rem) clamp(0.9rem, 2vw, 1.4rem);">
+                <span style="font-size: clamp(0.85rem, 1.4vw, 1.1rem); color: var(--ink);"><span style="color:var(--neon); font-weight:700;">✓</span> This is exactly how <span class="mono" style="color:var(--neon);">timesheet-recap</span> reached all of you — published to the <span class="mono" style="color:var(--neon);">productivity</span> plugin, live in our org directory right now.</span>
+                <span style="display:block; margin-top: 0.5em; color: var(--ink-faint); font-size: clamp(0.7rem, 1.05vw, 0.82rem); font-style: italic;">Requires a Team or Enterprise plan; an org owner enables Code execution + File creation first.</span>
+            </div>
         </div>
         <div class="slide-meta">
             <span class="num">10</span>
@@ -1233,13 +1238,13 @@ active pay period...</pre>
             <div class="two-col" style="margin-top: var(--content-gap);">
                 <div class="col reveal" data-delay="2">
                     <div class="plugin-tree">
-<span class="root">eg-timesheet/</span>
+<span class="root">productivity/</span>
 ├── plugin.json
 ├── skills/
-│   └── <span class="skill">timesheet-recap/</span>
+│   └── <span class="skill">timesheet-recap/</span>   <span class="annotation"># live now</span>
 │       └── SKILL.md
 └── mcp/
-    └── <span class="mcp">eg-mcp.json</span>   <span class="annotation"># existing server, bundled in</span></div>
+    └── <span class="mcp">eg-mcp.json</span>          <span class="annotation"># next step</span></div>
                 </div>
                 <div class="col reveal" data-delay="3">
                     <ul class="bullets">
@@ -1248,7 +1253,7 @@ active pay period...</pre>
                         <li>One install on day one. Both halves arrive together.</li>
                     </ul>
                     <p style="margin-top: var(--content-gap); color: var(--ink-dim); font-size: clamp(0.8rem, 1.3vw, 1rem); line-height: 1.5;">
-                        First stop: the Cowork org directory. Maybe later: a public marketplace if we open-source it.
+                        The skill's <strong style="color:var(--ink);">already live</strong> in the org. Next: fold in the MCP server so one plugin both drafts and logs.
                     </p>
                 </div>
             </div>
@@ -1405,17 +1410,19 @@ active pay period...</pre>
     <section class="slide" data-section="MCP Apps">
         <div class="slide-tag">MCP Apps · Where it works</div>
         <div class="slide-content">
-            <h2 class="reveal">Already shipped in the clients that matter.</h2>
+            <h2 class="reveal">Shipping across more clients every month.</h2>
             <p class="reveal" data-delay="1" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 56ch;">
-                Build the UI once, render in any compliant host.
+                Build the UI once, render in any compliant host. Support isn't universal yet — but the list keeps growing.
             </p>
             <div class="client-row">
                 <span class="client-pill reveal" data-delay="2"><span class="dot"></span>Claude</span>
                 <span class="client-pill reveal" data-delay="3"><span class="dot"></span>ChatGPT</span>
-                <span class="client-pill reveal" data-delay="4"><span class="dot"></span>VS Code</span>
+                <span class="client-pill reveal" data-delay="4"><span class="dot"></span>GitHub Copilot</span>
                 <span class="client-pill reveal" data-delay="5"><span class="dot"></span>Goose</span>
+                <span class="client-pill reveal" data-delay="6"><span class="dot"></span>Cursor</span>
+                <span class="client-pill reveal" data-delay="7"><span class="dot" style="background: #ff5050; box-shadow: 0 0 8px #ff5050;"></span>OpenCode</span>
             </div>
-            <div class="checklist reveal" data-delay="6" style="margin-top: clamp(1rem, 3vh, 2rem);">
+            <div class="checklist reveal" data-delay="8" style="margin-top: clamp(1rem, 3vh, 2rem);">
                 <h3>Compare to AG-UI Protocol</h3>
                 <ul>
                     <li>AG-UI is a separate library bolted on. MCP Apps lives <em style="color:var(--ink);">inside</em> the MCP server — one place to ship behavior + UI.</li>
