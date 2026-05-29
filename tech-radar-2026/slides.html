@@ -422,7 +422,7 @@
         .arc-row {
             display: grid;
             grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
-            align-items: center;
+            align-items: stretch;
             gap: clamp(0.4rem, 1vw, 0.85rem);
             margin-top: clamp(1rem, 3vh, 2rem);
         }
@@ -451,6 +451,11 @@
             font-weight: 700;
             font-size: clamp(0.85rem, 1.4vw, 1.1rem);
             line-height: 1.15;
+            /* Reserve two lines so single-line titles align their ring/blurb
+               with the wrapping "Claude Code Plugin Marketplace" card. */
+            min-height: calc(2 * 1.15em);
+            display: flex;
+            align-items: flex-start;
         }
         .arc-step .step-blurb {
             font-size: clamp(0.65rem, 1vw, 0.78rem);
@@ -461,6 +466,7 @@
             font-family: var(--font-mono);
             color: var(--electric);
             font-size: clamp(1rem, 2vw, 1.5rem);
+            align-self: center;
         }
 
         /* =========================================================
@@ -902,7 +908,7 @@
                 <div class="arc-arrow reveal" data-delay="2">→</div>
                 <div class="arc-step reveal" data-delay="3">
                     <span class="step-num">02 · SHARE</span>
-                    <span class="step-title">Plugin Marketplace</span>
+                    <span class="step-title">Claude Code Plugin Marketplace</span>
                     <span class="ring ring--trial">Trial · Tools</span>
                     <span class="step-blurb">Versioned distribution for skills, commands, prompts.</span>
                 </div>
@@ -1079,7 +1085,7 @@ active pay period...</pre>
         <div class="huge-num reveal-blur">02<span class="slash">/</span></div>
         <div class="slide-content">
             <div class="section-ring reveal"><span class="ring ring--trial ring--big">Trial · Tools</span></div>
-            <h2 class="reveal" data-delay="1">Plugin Marketplace.</h2>
+            <h2 class="reveal" data-delay="1">Claude Code Plugin Marketplace.</h2>
             <p class="section-desc reveal" data-delay="2">
                 A Git repo + a manifest. That's how teams stop sharing skills as zip files in DMs.
             </p>
@@ -1490,7 +1496,7 @@ active pay period...</pre>
                 </div>
                 <div class="recap-item reveal" data-delay="3">
                     <span class="ring ring--trial">Trial</span>
-                    <span class="recap-name">Plugin Marketplace</span>
+                    <span class="recap-name">Claude Code Plugin Marketplace</span>
                     <span style="color:var(--ink-dim); font-size: clamp(0.72rem, 1.1vw, 0.85rem); line-height: 1.4;">Git repo or Cowork org directory — stop sharing skills in DMs.</span>
                 </div>
                 <div class="recap-item reveal" data-delay="4">
