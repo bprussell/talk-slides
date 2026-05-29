@@ -1300,7 +1300,7 @@ active pay period...</pre>
             <p class="pull-quote reveal">
                 <span class="open">"</span>Almost everything I might achieve with an MCP can be handled by a <em>CLI tool</em> instead.<span style="color: var(--hot);">"</span>
             </p>
-            <p class="quote-attr reveal" data-delay="2">— Simon Willison · October 16, 2025 · <span style="opacity: 0.7;">featured in Thoughtworks Radar Vol 34</span></p>
+            <p class="quote-attr reveal" data-delay="2">— <a href="https://simonwillison.net/2025/Oct/16/claude-skills/" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.35); text-underline-offset: 3px;">Simon Willison</a> · October 16, 2025 · <span style="opacity: 0.7;">featured in Thoughtworks Radar Vol 34</span></p>
         </div>
         <div class="slide-meta">
             <span class="num">13</span>
@@ -1317,26 +1317,26 @@ active pay period...</pre>
         <div class="slide-content">
             <h2 class="reveal">The <em style="color:var(--hot); font-style: normal;">abstraction tax</em> is real.</h2>
             <p class="reveal" data-delay="1" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 60ch;">
-                Every protocol layer between agent and API costs fidelity. Complex APIs <em style="color:var(--hot);">compound</em> the loss.
+                Every layer between the agent and the real tool loses a little in translation. The more complex the tool, the more that loss <em style="color:var(--hot);">compounds</em>.
             </p>
             <p class="reveal" data-delay="1" style="color: var(--ink-faint); margin-top: 0.4em; font-size: clamp(0.72rem, 1.05vw, 0.85rem); font-style: italic;">
-                "abstraction tax" — Justin Poehnelt
+                "abstraction tax" — <a href="https://justin.poehnelt.com/posts/mcp-abstraction-tax/" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.35); text-underline-offset: 3px;">Justin Poehnelt</a> · Mar 6, 2026
             </p>
             <div class="two-col" style="margin-top: var(--content-gap);">
                 <div class="col reveal" data-delay="2">
                     <h3 style="color: var(--hot); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">Skip MCP when</h3>
                     <ul class="bullets" style="margin-top: var(--element-gap);">
-                        <li>A CLI with <span class="mono">--help</span>, JSON output, and clear exit codes already exists.</li>
-                        <li>A skill with a small script will do the job.</li>
-                        <li>Only one tenant, one team, one machine.</li>
+                        <li>A <strong style="color:var(--ink);">command-line tool</strong> already does it — the agent reads its built-in <span class="mono">--help</span> and figures it out.</li>
+                        <li>A small <strong style="color:var(--ink);">skill</strong> and a short script get the job done.</li>
+                        <li>It's just <strong style="color:var(--ink);">one team, one machine</strong> — no one else to share with.</li>
                     </ul>
                 </div>
                 <div class="col reveal" data-delay="3">
-                    <h3 style="color: var(--electric-soft); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">MCP earns its place when</h3>
+                    <h3 style="color: var(--electric-soft); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">Use MCP when</h3>
                     <ul class="bullets" style="margin-top: var(--element-gap);">
-                        <li>You need <strong style="color:var(--ink);">OAuth boundaries</strong> (multi-user, governed access).</li>
-                        <li>You need <strong style="color:var(--ink);">structured tool contracts</strong> across many clients.</li>
-                        <li>You need <strong style="color:var(--ink);">multi-tenant governance</strong> from one server.</li>
+                        <li>Different people need <strong style="color:var(--ink);">different, controlled access</strong> — separate logins and permissions.</li>
+                        <li>Many different apps must use the <strong style="color:var(--ink);">same tools the same way</strong>.</li>
+                        <li>One service has to <strong style="color:var(--ink);">safely serve many customers</strong> at once.</li>
                     </ul>
                 </div>
             </div>
