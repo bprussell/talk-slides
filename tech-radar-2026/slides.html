@@ -783,10 +783,11 @@
            CLOSING / RECAP
            ========================================================= */
         .recap-rings {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: clamp(0.5rem, 1.5vw, 1.2rem);
             margin-top: var(--content-gap);
+            max-width: clamp(34rem, 72vw, 46rem);
         }
         .recap-rings .recap-item {
             background: rgba(255, 255, 255, 0.03);
