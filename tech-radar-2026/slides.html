@@ -904,28 +904,28 @@
                     <span class="step-num">01 · BUILD</span>
                     <span class="step-title">Agent Skills</span>
                     <span class="ring ring--trial">Trial · Techniques</span>
-                    <span class="step-blurb">Modular, on-demand context.</span>
+                    <span class="step-blurb">Reusable know-how the agent loads only when it's needed.</span>
                 </div>
                 <div class="arc-arrow reveal" data-delay="2">→</div>
                 <div class="arc-step reveal" data-delay="3">
                     <span class="step-num">02 · SHARE</span>
                     <span class="step-title">Claude Code Plugin Marketplace</span>
                     <span class="ring ring--trial">Trial · Tools</span>
-                    <span class="step-blurb">Versioned distribution for skills, commands, prompts.</span>
+                    <span class="step-blurb">Share skills with your team, tracked and updated like code.</span>
                 </div>
                 <div class="arc-arrow reveal" data-delay="3">→</div>
                 <div class="arc-step is-caution reveal" data-delay="4">
                     <span class="step-num">03 · QUESTION</span>
                     <span class="step-title">MCP by Default</span>
                     <span class="ring ring--caution">Caution · Techniques</span>
-                    <span class="step-blurb">Stop reaching for MCP when a CLI would do.</span>
+                    <span class="step-blurb">Reach for a CLI first; bring in MCP only when you need it.</span>
                 </div>
                 <div class="arc-arrow reveal" data-delay="4">→</div>
                 <div class="arc-step reveal" data-delay="5">
                     <span class="step-num">04 · EXTEND</span>
                     <span class="step-title">MCP Apps</span>
                     <span class="ring ring--assess">Assess · Platforms</span>
-                    <span class="step-blurb">Interactive UI inside an MCP response.</span>
+                    <span class="step-blurb">Interactive screens, returned right inside the agent's answer.</span>
                 </div>
             </div>
         </div>
@@ -946,7 +946,7 @@
             <div class="section-ring reveal"><span class="ring ring--trial ring--big">Trial · Techniques</span></div>
             <h2 class="reveal" data-delay="1">Agent Skills.</h2>
             <p class="section-desc reveal" data-delay="2">
-                An open standard for packaging instructions, scripts, and resources — and only loading them when the agent actually needs them.
+                An open standard for packaging instructions, scripts, and resources, then loading them only when the agent actually needs them.
             </p>
         </div>
         <div class="slide-meta">
@@ -964,7 +964,7 @@
         <div class="slide-content">
             <h2 class="reveal">A skill is a folder.</h2>
             <p class="reveal" data-delay="1" style="color:var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.2rem); max-width: 56ch;">
-                Frontmatter, a body of instructions, and whatever scripts or references the agent might need to do the job.
+                A short description up top, a set of instructions, and any scripts or reference files the agent might need.
             </p>
             <div class="two-col" style="margin-top: var(--content-gap);">
                 <div class="col reveal" data-delay="2">
@@ -993,7 +993,7 @@ active pay period...</pre>
 └── references/
     └── eg_categories.md</pre>
                     <p style="margin-top: clamp(0.5rem, 1.5vh, 1rem); color: var(--ink-dim); font-size: clamp(0.75rem, 1.2vw, 0.95rem); line-height: 1.5;">
-                        Only the <span class="mono" style="color:var(--neon);">description</span> ships in the agent's base context. The body and files load <em style="color:var(--ink);">when the skill matches</em> — same format in Claude Code, the API, <em style="color:var(--ink);">and Cowork</em>.
+                        Only the <span class="mono" style="color:var(--neon);">description</span> stays loaded at all times. The full instructions and files load <em style="color:var(--ink);">when the skill is actually needed</em>. Same format in Claude Code, the API, <em style="color:var(--ink);">and Cowork</em>.
                     </p>
                 </div>
             </div>
@@ -1011,20 +1011,20 @@ active pay period...</pre>
     <section class="slide" data-section="Skills">
         <div class="slide-tag">Skills · Why it matters</div>
         <div class="slide-content">
-            <h2 class="reveal">Progressive disclosure for agents.</h2>
+            <h2 class="reveal">Loaded only when it's needed.</h2>
             <p class="reveal" data-delay="1" style="color:var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.2rem); max-width: 56ch;">
-                Skills solve the same problem libraries solved for code: you don't load every function into memory just in case.
+                Call it progressive disclosure. Skills solve the same problem libraries solved for code: you don't load every function into memory just in case.
             </p>
             <ul class="bullets reveal" data-delay="2" style="margin-top: var(--content-gap); max-width: 70ch;">
-                <li>Tokens stay cheap — instructions only enter context when relevant.</li>
-                <li>You can ship dozens of skills without poisoning the context window.</li>
+                <li>It stays cheap to run: the agent only reads a skill's instructions when they're relevant.</li>
+                <li>You can add dozens of skills without overloading the agent's context window.</li>
                 <li>The body can include scripts the agent <em>runs</em>, not just text it reads.</li>
-                <li>It's a portable standard — the same SKILL.md folder works across Claude Code, Anthropic API, plus other tools picking up the format.</li>
+                <li>It's a portable standard: the same skill folder works in Claude Code, the API, and a growing list of other tools.</li>
             </ul>
             <div class="checklist reveal" data-delay="3">
                 <h3>The catch (Thoughtworks calls this out)</h3>
                 <ul>
-                    <li>Unreviewed third-party skills = supply chain risk. A SKILL.md can ship arbitrary scripts. Review what you install.</li>
+                    <li>A skill can include scripts that run on your machine. Treat an unreviewed third-party skill like any unknown dependency: review it before you install.</li>
                 </ul>
             </div>
         </div>
@@ -1042,7 +1042,7 @@ active pay period...</pre>
         <div class="grid-bg"></div>
         <div class="slide-content">
             <span class="demo-badge reveal">Demo · 01</span>
-            <h2 class="reveal" data-delay="1"><em>timesheet-recap</em> — a Cowork skill, not an MCP server.</h2>
+            <h2 class="reveal" data-delay="1"><em>timesheet-recap</em>: a Cowork skill, not an MCP server.</h2>
             <div class="demo-grid">
                 <div class="demo-card reveal" data-delay="2">
                     <div class="card-label">What it does</div>
@@ -1053,20 +1053,20 @@ active pay period...</pre>
                 <div class="demo-card reveal" data-delay="3">
                     <div class="card-label">Why a skill</div>
                     <p class="card-body">
-                        No new server, no auth plumbing of my own. Slack &amp; Outlook are already wired in through Cowork's <strong style="color:var(--ink);">connectors</strong> — the skill just <em style="color:var(--neon);">composes</em> what's there.
+                        No new server, no auth plumbing of my own. Slack &amp; Outlook are already wired in through Cowork's <strong style="color:var(--ink);">connectors</strong>. The skill just <em style="color:var(--neon);">composes</em> what's there.
                     </p>
                 </div>
 
                 <div class="demo-card reveal" data-delay="4">
                     <div class="card-label">Watch for</div>
                     <p class="card-body">
-                        It auto-activates from its <span class="mono" style="color:var(--neon);">description</span> — I just ask what I did this pay period. The <span class="mono" style="color:var(--neon);">/timesheet-recap</span> slash command is there too if I want to invoke it explicitly.
+                        It auto-activates from its <span class="mono" style="color:var(--neon);">description</span>. I just ask what I did this pay period. The <span class="mono" style="color:var(--neon);">/timesheet-recap</span> slash command is there too if I want to invoke it explicitly.
                     </p>
                 </div>
                 <div class="demo-card reveal" data-delay="5">
                     <div class="card-label">Status</div>
                     <p class="card-body">
-                        Not a demo prop — I run this <strong style="color:var(--ink);">every pay period</strong> to fill out my real timesheet. (How I got it to all of you: coming up.)
+                        Not a demo prop. I run this <strong style="color:var(--ink);">every pay period</strong> to fill out my real timesheet. (How I got it to all of you: coming up.)
                     </p>
                 </div>
             </div>
@@ -1088,7 +1088,7 @@ active pay period...</pre>
             <div class="section-ring reveal"><span class="ring ring--trial ring--big">Trial · Tools</span></div>
             <h2 class="reveal" data-delay="1">Claude Code Plugin Marketplace.</h2>
             <p class="section-desc reveal" data-delay="2">
-                A Git repo + a manifest. That's how teams stop sharing skills as zip files in DMs.
+                A shared repository your whole team installs from, with a simple index file that keeps everyone in sync.
             </p>
         </div>
         <div class="slide-meta">
@@ -1104,9 +1104,9 @@ active pay period...</pre>
     <section class="slide" data-section="Marketplace">
         <div class="slide-tag">Marketplace · Mechanism</div>
         <div class="slide-content">
-            <h2 class="reveal">Skills, commands, prompts — versioned.</h2>
+            <h2 class="reveal">Skills, commands, prompts, all versioned.</h2>
             <p class="reveal" data-delay="1" style="color:var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 56ch;">
-                A Claude Code plugin is a bundle. A marketplace is a Git repo of bundles. Anyone can host one — internally, publicly, or both.
+                A plugin is a labeled package of agent abilities. A marketplace is a Git repo of those plugins that your team installs from. Anyone can host one: internally, publicly, or both.
             </p>
             <div class="two-col" style="margin-top: var(--content-gap);">
                 <div class="col reveal" data-delay="2">
@@ -1125,15 +1125,15 @@ active pay period...</pre>
                 </div>
                 <div class="col reveal" data-delay="3">
                     <ul class="bullets">
-                        <li><span class="mono" style="color:var(--neon);">/plugin marketplace add &lt;repo&gt;</span> — point Claude Code at a Git URL.</li>
-                        <li><span class="mono" style="color:var(--neon);">/plugin install productivity</span> — sync the bundle locally.</li>
+                        <li><span class="mono" style="color:var(--neon);">/plugin marketplace add &lt;repo&gt;</span>: point Claude Code at a Git URL.</li>
+                        <li><span class="mono" style="color:var(--neon);">/plugin install productivity</span>: sync the bundle locally.</li>
                         <li>Updates are pulls, not copy-paste from Confluence.</li>
-                        <li>A plugin can contain skills <em>and</em> commands <em>and</em> hooks <em>and</em> an MCP server.</li>
+                        <li>A plugin can bundle skills, commands, automations, <em>and even</em> an MCP server.</li>
                     </ul>
                 </div>
             </div>
             <div class="reveal" data-delay="4" style="margin-top: var(--content-gap); background: rgba(42,109,255,0.08); border-left: 3px solid var(--electric); border-radius: 0 10px 10px 0; padding: clamp(0.6rem, 1.4vw, 1rem) clamp(0.9rem, 2vw, 1.4rem); font-size: clamp(0.78rem, 1.25vw, 1rem); line-height: 1.5; color: var(--ink);">
-                <strong style="color:var(--electric-soft);">Scope check</strong> — project-only skill? Commit it to the repo's <span class="mono" style="color:var(--neon);">.claude/skills/</span>; it ships with the code. Cross-project or org-wide? <em style="color:var(--ink);">That's</em> what a marketplace is for.
+                <strong style="color:var(--electric-soft);">Scope check</strong>: project-only skill? Commit it to the repo's <span class="mono" style="color:var(--neon);">.claude/skills/</span>; it ships with the code. Cross-project or org-wide? <em style="color:var(--ink);">That's</em> what a marketplace is for.
             </div>
         </div>
         <div class="slide-meta">
@@ -1159,11 +1159,11 @@ active pay period...</pre>
                             obra/superpowers
                         </p>
                         <p style="margin-top: 0.5em; color: var(--ink-dim); font-size: clamp(0.75rem, 1.2vw, 0.95rem); line-height: 1.5;">
-                            Jesse Vincent's dev methodology — TDD, debugging, planning, code review. Official Anthropic plugin.
+                            Jesse Vincent's software-development method: test-first coding, debugging, planning, and code review. Community-built, now featured in Anthropic's official marketplace.
                         </p>
                         <ul class="bullets" style="margin-top: clamp(0.5rem, 1.5vh, 1rem); font-size: clamp(0.72rem, 1.15vw, 0.92rem);">
                             <li><span class="mono" style="color:var(--neon);">/plugin marketplace add obra/superpowers</span></li>
-                            <li>Subagent workflows with built-in verification.</li>
+                            <li>Breaks work into sub-tasks and checks its own results.</li>
                         </ul>
                     </div>
                 </div>
@@ -1175,7 +1175,7 @@ active pay period...</pre>
                             dotnet/skills
                         </p>
                         <p style="margin-top: 0.5em; color: var(--ink-dim); font-size: clamp(0.75rem, 1.2vw, 0.95rem); line-height: 1.5;">
-                            Microsoft's .NET team. Plugins for ASP.NET, EF, AI, testing, framework upgrades.
+                            Microsoft's .NET team. Plugins for all the .NET things.
                         </p>
                         <ul class="bullets" style="margin-top: clamp(0.5rem, 1.5vh, 1rem); font-size: clamp(0.72rem, 1.15vw, 0.92rem);">
                             <li><span class="mono" style="color:var(--electric-soft);">/plugin marketplace add dotnet/skills</span></li>
@@ -1201,29 +1201,29 @@ active pay period...</pre>
             <div class="kicker reveal">Built into the product</div>
             <h2 class="reveal" data-delay="1">Cowork on a team plan: publish to your <span style="color:var(--neon);">org directory</span>.</h2>
             <p class="reveal" data-delay="2" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 60ch;">
-                Same SKILL.md format. A managed, org-scoped directory — teammates don't add a marketplace by hand; approved plugins just show up.
+                Same SKILL.md format. A managed, org-scoped directory. Teammates don't add a marketplace by hand; approved plugins just show up.
             </p>
             <div class="two-col" style="margin-top: var(--content-gap);">
                 <div class="col reveal" data-delay="3">
                     <h3 style="color: var(--electric-soft); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">How it works</h3>
                     <ul class="bullets" style="margin-top: var(--element-gap);">
-                        <li>Build the skill in Cowork — or bring an existing SKILL.md folder.</li>
+                        <li>Build the skill in Cowork, or bring an existing SKILL.md folder.</li>
                         <li>Add the plugin to your org's plugins repo.</li>
-                        <li>It shows up in everyone's org directory — one-click install.</li>
+                        <li>It shows up in everyone's org directory: one-click install.</li>
                         <li>Push an update → everyone gets it automatically.</li>
                     </ul>
                 </div>
                 <div class="col reveal" data-delay="4">
                     <h3 style="color: var(--neon); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">Why it complements the radar entry</h3>
                     <ul class="bullets" style="margin-top: var(--element-gap);">
-                        <li><strong style="color:var(--ink);">Git marketplace</strong> — open, portable, public-or-private, consumers add the repo themselves.</li>
-                        <li><strong style="color:var(--ink);">Cowork org directory</strong> — managed, internal-only; teammates install in a click and updates propagate automatically.</li>
+                        <li><strong style="color:var(--ink);">Git marketplace</strong>: open, portable, public or private; consumers add the repo themselves.</li>
+                        <li><strong style="color:var(--ink);">Cowork org directory</strong>: managed, internal-only; teammates install in a click and updates propagate automatically.</li>
                         <li>Same SKILL.md. Pick the channel that fits the audience.</li>
                     </ul>
                 </div>
             </div>
             <div class="reveal" data-delay="5" style="margin-top: var(--content-gap); background: rgba(232,255,61,0.06); border-left: 3px solid var(--neon); border-radius: 0 10px 10px 0; padding: clamp(0.7rem, 1.5vw, 1.1rem) clamp(0.9rem, 2vw, 1.4rem);">
-                <span style="font-size: clamp(0.85rem, 1.4vw, 1.1rem); color: var(--ink);"><span style="color:var(--neon); font-weight:700;">✓</span> This is exactly how <span class="mono" style="color:var(--neon);">timesheet-recap</span> reached all of you — published to the <span class="mono" style="color:var(--neon);">productivity</span> plugin, live in our org directory right now.</span>
+                <span style="font-size: clamp(0.85rem, 1.4vw, 1.1rem); color: var(--ink);"><span style="color:var(--neon); font-weight:700;">✓</span> This is exactly how <span class="mono" style="color:var(--neon);">timesheet-recap</span> reached all of you: published to the <span class="mono" style="color:var(--neon);">productivity</span> plugin, live in our org directory right now.</span>
                 <span style="display:block; margin-top: 0.5em; color: var(--ink-faint); font-size: clamp(0.7rem, 1.05vw, 0.82rem); font-style: italic;">Requires a Team or Enterprise plan; an org owner enables Code execution + File creation first.</span>
             </div>
         </div>
@@ -1255,8 +1255,8 @@ active pay period...</pre>
                 </div>
                 <div class="col reveal" data-delay="3">
                     <ul class="bullets">
-                        <li><strong style="color:var(--ink);">The skill drafts</strong> — researches your Slack + Outlook, writes the entry.</li>
-                        <li><strong style="color:var(--ink);">The MCP server posts</strong> — <span class="mono" style="color:var(--neon);">log_time()</span> hits our internal API.</li>
+                        <li><strong style="color:var(--ink);">The skill drafts</strong>: researches your Slack + Outlook, writes the entry.</li>
+                        <li><strong style="color:var(--ink);">The MCP server posts</strong>: <span class="mono" style="color:var(--neon);">log_time()</span> hits our internal API.</li>
                         <li>One install on day one. Both halves arrive together.</li>
                     </ul>
                     <p style="margin-top: var(--content-gap); color: var(--ink-dim); font-size: clamp(0.8rem, 1.3vw, 1rem); line-height: 1.5;">
@@ -1327,15 +1327,15 @@ active pay period...</pre>
                 <div class="col reveal" data-delay="2">
                     <h3 style="color: var(--hot); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">Skip MCP when</h3>
                     <ul class="bullets" style="margin-top: var(--element-gap);">
-                        <li>A <strong style="color:var(--ink);">command-line tool</strong> already does it — the agent reads its built-in <span class="mono">--help</span> and figures it out.</li>
+                        <li>A <strong style="color:var(--ink);">command-line tool</strong> already does it. The agent reads its built-in <span class="mono">--help</span> and figures it out.</li>
                         <li>A small <strong style="color:var(--ink);">skill</strong> and a short script get the job done.</li>
-                        <li>It's just <strong style="color:var(--ink);">one team, one machine</strong> — no one else to share with.</li>
+                        <li>It's just <strong style="color:var(--ink);">one team, one machine</strong>, with no one else to share with.</li>
                     </ul>
                 </div>
                 <div class="col reveal" data-delay="3">
                     <h3 style="color: var(--electric-soft); font-family: var(--font-mono); font-size: clamp(0.8rem, 1.3vw, 1rem); letter-spacing: 0.12em; text-transform: uppercase;">Use MCP when</h3>
                     <ul class="bullets" style="margin-top: var(--element-gap);">
-                        <li>Different people need <strong style="color:var(--ink);">different, controlled access</strong> — separate logins and permissions.</li>
+                        <li>Different people need <strong style="color:var(--ink);">different, controlled access</strong>: separate logins and permissions.</li>
                         <li>Many different apps must use the <strong style="color:var(--ink);">same tools the same way</strong>.</li>
                         <li>One service has to <strong style="color:var(--ink);">safely serve many customers</strong> at once.</li>
                     </ul>
@@ -1359,7 +1359,7 @@ active pay period...</pre>
             <div class="section-ring reveal"><span class="ring ring--assess ring--big">Assess · Platforms</span></div>
             <h2 class="reveal" data-delay="1">MCP Apps.</h2>
             <p class="section-desc reveal" data-delay="2">
-                The first official MCP extension. MCP servers can now return <em style="color: var(--neon);">interactive HTML</em> — not just text.
+                The first official MCP extension. MCP servers can now return <em style="color: var(--neon);">interactive HTML</em>, not just text.
             </p>
         </div>
         <div class="slide-meta">
@@ -1376,6 +1376,9 @@ active pay period...</pre>
         <div class="slide-tag">MCP Apps · How it works</div>
         <div class="slide-content">
             <h2 class="reveal">A new resource scheme: <span class="mono" style="color: var(--neon);">ui://</span></h2>
+            <p class="reveal" data-delay="1" style="color: var(--ink); margin-top: var(--element-gap); font-size: clamp(0.95rem, 1.6vw, 1.2rem); max-width: 60ch;">
+                An MCP server can now hand back a small interactive screen instead of plain text, and the agent can see what you click.
+            </p>
             <p class="reveal" data-delay="1" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 58ch;">
                 Tool returns a UI template + data → host renders it in a sandboxed iframe. Text fallback if the client doesn't support UI.
             </p>
@@ -1396,10 +1399,10 @@ active pay period...</pre>
                 </div>
                 <div class="col reveal" data-delay="3">
                     <ul class="bullets">
-                        <li><strong style="color:var(--ink);">Bidirectional</strong> — the model can observe user actions inside the iframe.</li>
-                        <li><strong style="color:var(--ink);">Sandboxed</strong> — host controls what the iframe can touch.</li>
-                        <li><strong style="color:var(--ink);">Graceful</strong> — text fallback keeps non-UI clients working.</li>
-                        <li><strong style="color:var(--ink);">Standard</strong> — first official extension. Anthropic + OpenAI + community.</li>
+                        <li><strong style="color:var(--ink);">Bidirectional</strong>: the model can observe user actions inside the iframe.</li>
+                        <li><strong style="color:var(--ink);">Sandboxed</strong>: host controls what the iframe can touch.</li>
+                        <li><strong style="color:var(--ink);">Graceful</strong>: text fallback keeps non-UI clients working.</li>
+                        <li><strong style="color:var(--ink);">Standard</strong>: first official extension. Anthropic + OpenAI + community.</li>
                     </ul>
                 </div>
             </div>
@@ -1419,7 +1422,7 @@ active pay period...</pre>
         <div class="slide-content">
             <h2 class="reveal">Shipping across more clients every month.</h2>
             <p class="reveal" data-delay="1" style="color: var(--ink-dim); margin-top: var(--element-gap); font-size: clamp(0.9rem, 1.5vw, 1.15rem); max-width: 56ch;">
-                Build the UI once, render in any compliant host. Support isn't universal yet — but the list keeps growing.
+                Build the interactive screen once, and it runs in any app that supports the standard. Support isn't universal yet, but the list keeps growing.
             </p>
             <div class="client-row">
                 <span class="client-pill reveal" data-delay="2"><span class="dot"></span>Claude</span>
@@ -1428,12 +1431,6 @@ active pay period...</pre>
                 <span class="client-pill reveal" data-delay="5"><span class="dot"></span>Goose</span>
                 <span class="client-pill reveal" data-delay="6"><span class="dot"></span>Cursor</span>
                 <span class="client-pill reveal" data-delay="7"><span class="dot" style="background: #ff5050; box-shadow: 0 0 8px #ff5050;"></span>OpenCode</span>
-            </div>
-            <div class="checklist reveal" data-delay="8" style="margin-top: clamp(1rem, 3vh, 2rem);">
-                <h3>Compare to AG-UI Protocol</h3>
-                <ul>
-                    <li>AG-UI is a separate library bolted on. MCP Apps lives <em style="color:var(--ink);">inside</em> the MCP server — one place to ship behavior + UI.</li>
-                </ul>
             </div>
         </div>
         <div class="slide-meta">
@@ -1466,10 +1463,10 @@ active pay period...</pre>
                 <div class="demo-card reveal" data-delay="3">
                     <div class="card-label">Next · EG MCP migration</div>
                     <p class="card-body">
-                        Today: our EG MCP renders handbook, perk wallet, timesheet, vacation via the <strong style="color:var(--ink);">ChatGPT Apps SDK</strong> — bound to one host.
+                        Today: our EG MCP renders handbook, perk wallet, timesheet, vacation via the <strong style="color:var(--ink);">ChatGPT Apps SDK</strong>, bound to one host.
                     </p>
                     <p class="card-body" style="margin-top: 0.6em;">
-                        Plan: same server, <span class="mono" style="color:var(--neon);">ui://</span> resources — portable to every compliant host. This talk is the motivation to start.
+                        Plan: same server, <span class="mono" style="color:var(--neon);">ui://</span> resources, portable to every compliant host. This talk is the motivation to start.
                     </p>
                 </div>
             </div>
