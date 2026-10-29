@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How AI Is Changing the Work Inside Jobs</title>
+
+    <!-- Fonts: Newsreader (headlines), IBM Plex Sans Condensed (posting text + chrome), Kalam (pen notes) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=Kalam:wght@400&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           THEME: MARKED-UP POSTING
+           A printed job description on paper, worked over with
+           highlighters and a red pen. Highlighter colors double as
+           the workshop's two axes:
+             --hl-can    (yellow) = capability: can AI do this?
+             --hl-should (mint)   = desirability: should AI do this?
+           Placeholder theme until the E-gineering design system lands.
+           ========================================================= */
+        :root {
+            /* Paper + ink */
+            --stage-bg:   #2b2a27;
+            --slide-bg:   #f7f4ec;
+            --paper-card: #fffdf7;
+            --ink:        #1d1c1a;
+            --ink-soft:   #3a3833;
+            --muted:      #77736a;
+            --rule:       #d9d3c4;
+
+            /* Markup */
+            --hl-can:     #ffe45c;
+            --hl-should:  #9fe3c4;
+            --pen:        #c8321e;
+
+            /* Type */
+            --font-display: 'Newsreader', Georgia, serif;
+            --font-body:    'IBM Plex Sans Condensed', sans-serif;
+            --font-pen:     'Kalam', cursive;
+
+            /* Layout (authored at 1920x1080) */
+            --pad-x: 140px;
+
+            /* Motion */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-marker:   cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* =========================================================
+           FIXED 16:9 STAGE: MANDATORY BASE STYLES (viewport-base.css)
+           ========================================================= */
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+
+        .deck-viewport {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            background: var(--stage-bg, #000);
+        }
+
+        .deck-stage {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            transform-origin: 0 0;
+            background: var(--slide-bg, #fff);
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            display: block;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            background: var(--slide-bg, #fff);
+        }
+
+        .slide.active,
+        .slide.visible {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 1;
+        }
+
+        img,
+        video,
+        canvas,
+        svg {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .deck-controls {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        @media print {
+            html,
+            body {
+                width: 1920px;
+                height: auto;
+                overflow: visible;
+                background: #fff;
+            }
+
+            .deck-viewport {
+                position: static;
+                overflow: visible;
+                background: #fff;
+            }
+
+            .deck-stage {
+                position: static;
+                width: auto;
+                height: auto;
+                transform: none !important;
+                background: none;
+            }
+
+            .slide {
+                position: relative;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                width: 1920px;
+                height: 1080px;
+                break-after: page;
+                page-break-after: always;
+            }
+
+            .slide:last-child {
+                break-after: auto;
+                page-break-after: auto;
+            }
+
+            .deck-controls {
+                display: none !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+
+        /* =========================================================
+           SLIDE SURFACE
+           Paper with a soft light falloff, plus a quick cross-fade
+           between slides.
+           ========================================================= */
+        .slide {
+            font-family: var(--font-body);
+            color: var(--ink);
+            background:
+                radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.7), transparent 60%),
+                var(--slide-bg);
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+
+        /* =========================================================
+           POSTING CHROME
+           Header row with a heavy rule, like a printed form.
+           Left: workshop name. Right: page number.
+           ========================================================= */
+        .head {
+            position: absolute;
+            left: var(--pad-x);
+            right: var(--pad-x);
+            top: 96px;
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 22px;
+            border-bottom: 3px solid var(--ink);
+            font-weight: 500;
+            font-size: 22px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .head span:last-child { color: var(--muted); }
+
+        /* Section label: styled like a JD section heading */
+        .label {
+            position: absolute;
+            left: var(--pad-x);
+            top: 196px;
+            font-weight: 600;
+            font-size: 22px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        /* Slide headline (non-title slides) */
+        .headline {
+            position: absolute;
+            left: var(--pad-x);
+            top: 240px;
+            width: 1500px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 92px;
+            line-height: 1.04;
+            letter-spacing: -0.02em;
+        }
+
+        /* =========================================================
+           MARKUP: HIGHLIGHTER + PEN
+           Highlights sweep in when their slide becomes visible.
+           Use .hl for yellow (can), .hl.g for mint (should).
+           .d2/.d3 add delay for sequencing.
+           ========================================================= */
+        .hl {
+            background-image: linear-gradient(transparent 12%, var(--hl-can) 12%, var(--hl-can) 88%, transparent 88%);
+            background-repeat: no-repeat;
+            background-size: 0% 100%;
+            padding: 0 0.06em;
+            margin: 0 -0.06em;
+            -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+            transition: background-size 0.9s var(--ease-marker) 0.9s;
+        }
+
+        .hl.g {
+            background-image: linear-gradient(transparent 50%, var(--hl-should) 50%, var(--hl-should) 92%, transparent 92%);
+        }
+
+        .hl.d2 { transition-delay: 1.4s; }
+        .hl.d3 { transition-delay: 1.9s; }
+
+        .slide.visible .hl { background-size: 100% 100%; }
+
+        /* Red-pen handwritten note */
+        .pen {
+            position: absolute;
+            font-family: var(--font-pen);
+            font-size: 44px;
+            line-height: 1.15;
+            color: var(--pen);
+            transform: rotate(-4deg);
+            opacity: 0;
+            transition: opacity 0.5s ease 1.8s;
+        }
+
+        .slide.visible .pen { opacity: 1; }
+
+        /* Pen arrows are drawn outside their note's box; lift the base media cap */
+        .pen svg { max-width: none; max-height: none; }
+
+        /* Pen strokes (arrows, brackets, circles) draw themselves */
+        .stroke path {
+            fill: none;
+            stroke: var(--pen);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            transition: stroke-dashoffset 0.8s ease 1.8s;
+        }
+
+        .slide.visible .stroke path { stroke-dashoffset: 0; }
+
+        /* Strikethrough in pen */
+        .strike {
+            position: relative;
+            color: var(--muted);
+        }
+
+        .strike::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            right: -4px;
+            top: 52%;
+            height: 4px;
+            background: var(--pen);
+            border-radius: 2px;
+            transform: scaleX(0) rotate(-1.5deg);
+            transform-origin: left center;
+            transition: transform 0.5s var(--ease-marker) 1.2s;
+        }
+
+        .slide.visible .strike::after { transform: scaleX(1) rotate(-1.5deg); }
+
+        /* =========================================================
+           ENTRANCE ANIMATIONS
+           Staggered fade-up, replayed each time a slide is shown.
+           ========================================================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+        }
+
+        .slide.visible .reveal { opacity: 1; transform: none; }
+
+        .r1 { transition-delay: 0.05s; }
+        .r2 { transition-delay: 0.2s; }
+        .r3 { transition-delay: 0.35s; }
+        .r4 { transition-delay: 0.5s; }
+        .r5 { transition-delay: 0.65s; }
+        .r6 { transition-delay: 0.8s; }
+
+        /* =========================================================
+           SLIDE 1: TITLE
+           ========================================================= */
+        .title h1 {
+            position: absolute;
+            left: var(--pad-x);
+            top: 276px;
+            width: 1300px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 132px;
+            line-height: 1.02;
+            letter-spacing: -0.02em;
+        }
+
+        .title .sub {
+            position: absolute;
+            left: var(--pad-x);
+            top: 640px;
+            width: 1000px;
+            font-family: var(--font-display);
+            font-size: 40px;
+            line-height: 1.35;
+            color: var(--ink-soft);
+        }
+
+        /* Grey ruled lines suggesting the rest of a posting */
+        .ghost-lines {
+            position: absolute;
+            left: var(--pad-x);
+            top: 790px;
+            width: 1000px;
+        }
+
+        .ghost-lines i {
+            display: block;
+            height: 14px;
+            margin-bottom: 22px;
+            background: var(--rule);
+            border-radius: 3px;
+        }
+
+        .ghost-lines i:nth-child(2) { width: 86%; }
+        .ghost-lines i:nth-child(3) { width: 64%; }
+
+        .byline {
+            position: absolute;
+            left: var(--pad-x);
+            bottom: 96px;
+            font-weight: 500;
+            font-size: 26px;
+        }
+
+        .byline span { color: var(--muted); margin-left: 16px; }
+
+        .place {
+            position: absolute;
+            right: var(--pad-x);
+            bottom: 96px;
+            font-size: 22px;
+            color: var(--muted);
+            letter-spacing: 0.06em;
+        }
+
+        /* =========================================================
+           SLIDE 2: TWO POSTINGS
+           Two printouts laid on the page, slightly askew.
+           ========================================================= */
+        .printout {
+            position: absolute;
+            top: 420px;
+            width: 700px;
+            height: 500px;
+            padding: 52px 56px;
+            background: var(--paper-card);
+            border: 1px solid #e6e0d0;
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.04), 0 18px 40px rgba(60, 50, 30, 0.12);
+        }
+
+        .printout.old { left: 140px; transform: rotate(-1.6deg); }
+        .printout.new { left: 1000px; transform: rotate(1.2deg); }
+
+        .printout .yr {
+            font-weight: 600;
+            font-size: 22px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .printout h3 {
+            margin-top: 18px;
+            padding-bottom: 22px;
+            border-bottom: 3px solid var(--ink);
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 64px;
+            line-height: 1.05;
+            letter-spacing: -0.015em;
+        }
+
+        .printout .meta {
+            margin-top: 26px;
+            font-size: 30px;
+            line-height: 1.5;
+            color: var(--ink-soft);
+        }
+
+        .printout .ghost-lines { position: static; width: 100%; margin-top: 30px; }
+
+        /* =========================================================
+           SLIDE 3: POSTING EXCERPT WITH MARGIN NOTES
+           Each row: posting line on the left, pen note in the margin.
+           ========================================================= */
+        .excerpt {
+            position: absolute;
+            left: var(--pad-x);
+            top: 390px;
+            width: 1640px;
+        }
+
+        .excerpt .row {
+            display: grid;
+            grid-template-columns: 1120px 1fr;
+            align-items: center;
+            column-gap: 60px;
+            margin-bottom: 30px;
+        }
+
+        .excerpt .line {
+            position: relative;
+            padding-left: 40px;
+            font-size: 38px;
+            line-height: 1.3;
+        }
+
+        /* Square bullet, like the original PDF */
+        .excerpt .line::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55em;
+            width: 12px;
+            height: 12px;
+            background: var(--ink);
+        }
+
+        .excerpt .pen { position: static; font-size: 40px; }
+
+        /* The three AI lines share one bracket + note */
+        .ai-group { position: relative; }
+        .ai-group .row { grid-template-columns: 1120px; }
+
+        .ai-group .stroke {
+            position: absolute;
+            left: 1150px;
+            top: 0;
+            width: 50px;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .ai-group .pen {
+            position: absolute;
+            left: 1230px;
+            top: 50%;
+            margin-top: -30px;
+            font-size: 48px;
+        }
+
+        .footnote {
+            position: absolute;
+            left: var(--pad-x);
+            bottom: 96px;
+            font-size: 28px;
+            color: var(--muted);
+        }
+
+        /* =========================================================
+           SLIDE 4: WHAT WE HIRE FOR (2x2)
+           ========================================================= */
+        .quad {
+            position: absolute;
+            left: var(--pad-x);
+            top: 420px;
+            width: 1640px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 100px;
+            row-gap: 70px;
+        }
+
+        .quad .q h3 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 76px;
+            line-height: 1;
+            letter-spacing: -0.015em;
+        }
+
+        .quad .q p {
+            margin-top: 18px;
+            font-size: 34px;
+            line-height: 1.35;
+            color: var(--ink-soft);
+        }
+
+        /* =========================================================
+           SLIDE 5: QUOTE
+           ========================================================= */
+        .quote {
+            position: absolute;
+            left: var(--pad-x);
+            top: 300px;
+            width: 1480px;
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 96px;
+            line-height: 1.12;
+            letter-spacing: -0.015em;
+        }
+
+        .quote .mark {
+            position: absolute;
+            left: -80px;
+            top: -30px;
+            font-size: 180px;
+            line-height: 1;
+            color: var(--pen);
+        }
+
+        .attrib {
+            position: absolute;
+            left: var(--pad-x);
+            top: 760px;
+            font-size: 28px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        /* =========================================================
+           SLIDE 6: TWO REASONS
+           Numbers circled in pen.
+           ========================================================= */
+        .reasons {
+            position: absolute;
+            left: var(--pad-x);
+            top: 470px;
+            width: 1640px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 120px;
+        }
+
+        .reason .num {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-pen);
+            font-size: 56px;
+            color: var(--pen);
+        }
+
+        .reason .num svg {
+            position: absolute;
+            inset: -6px;
+            width: 102px;
+            height: 102px;
+            overflow: visible;
+        }
+
+        .reason h3 {
+            margin-top: 26px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 60px;
+            line-height: 1.08;
+            letter-spacing: -0.01em;
+        }
+
+        .reason p {
+            margin-top: 22px;
+            font-size: 34px;
+            line-height: 1.4;
+            color: var(--ink-soft);
+        }
+
+        /* =========================================================
+           SLIDE 7: SO WHAT
+           ========================================================= */
+        .statement {
+            position: absolute;
+            left: var(--pad-x);
+            top: 250px;
+            width: 1560px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 104px;
+            line-height: 1.06;
+            letter-spacing: -0.02em;
+        }
+
+        .audiences {
+            position: absolute;
+            left: var(--pad-x);
+            top: 650px;
+            width: 1640px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 100px;
+        }
+
+        .aud {
+            padding-top: 26px;
+            border-top: 2px solid var(--ink);
+        }
+
+        .aud .who {
+            font-weight: 600;
+            font-size: 24px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .aud p {
+            margin-top: 16px;
+            font-family: var(--font-display);
+            font-size: 42px;
+            line-height: 1.3;
+        }
+
+        /* =========================================================
+           PAGE CONTROLS + INLINE EDITING
+           Outside the slide design system.
+           ========================================================= */
+        .edit-hotzone {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            z-index: 10000;
+            cursor: pointer;
+        }
+
+        .edit-toggle {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 10001;
+            padding: 8px 14px;
+            border: 0;
+            border-radius: 6px;
+            background: #fffdf7;
+            color: var(--ink);
+            font: 500 14px var(--font-body);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .edit-toggle.show,
+        .edit-toggle.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .edit-toggle.active { background: var(--hl-can); }
+
+        body.editing [contenteditable="true"] {
+            outline: 2px dashed rgba(200, 50, 30, 0.45);
+            outline-offset: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-hotzone" aria-hidden="true"></div>
+    <button class="edit-toggle" id="editToggle" title="Edit mode (E). Ctrl+S saves a copy.">Edit</button>
+
+    <div class="deck-viewport">
+        <main class="deck-stage" id="deckStage">
+
+            <!-- =====================================================
+                 SLIDE 1: TITLE
+                 Notes: Introduce yourself. I'm a software engineer at
+                 E-gineering, and I sit in on our hiring interviews. I'm
+                 going to show you my own job, on paper, twice.
+                 ===================================================== -->
+            <section class="slide title active">
+                <div class="head reveal r1"><span>Jobs &amp; Roles Workshop</span><span>Purdue + Google AI Impact Summit</span></div>
+                <div class="label reveal r1" style="top:196px">Position overview</div>
+                <h1 class="reveal r2" style="width:1640px">How AI is changing <span class="hl">the work</span> inside jobs</h1>
+                <p class="sub reveal r3">One software role, 2023 to 2026: what changed on paper, and <span class="hl g d2">what changed in practice.</span></p>
+                <div class="ghost-lines reveal r3"><i></i><i></i><i></i></div>
+                <div class="pen" style="left:1265px; top:535px; width:440px;">
+                    <svg class="stroke" viewBox="0 0 170 110" style="position:absolute; left:-150px; top:-70px; width:170px; height:110px; overflow:visible;"><path d="M160 100 C 120 90, 60 70, 10 10 M10 10 l 6 24 M10 10 l 24 4"/></svg>
+                    mine, for example
+                </div>
+                <div class="byline reveal r4">Brad Russell<span>E-gineering</span></div>
+                <div class="place reveal r4">Indianapolis</div>
+            </section>
+
+            <!-- =====================================================
+                 SLIDE 2: SAME JOB, TWO POSTINGS
+                 Notes: This is the posting I applied to in 2023, and
+                 this is the posting for the same job today. Same company,
+                 same work. Let's look at what changed.
+                 ===================================================== -->
+            <section class="slide">
+                <div class="head reveal r1"><span>Jobs &amp; Roles Workshop</span><span>02 / 07</span></div>
+                <div class="label reveal r1">Exhibit A</div>
+                <h2 class="headline reveal r2">Same job. Two postings.</h2>
+
+                <article class="printout old reveal r3">
+                    <div class="yr">Posted 2023</div>
+                    <h3>Senior .NET Developer</h3>
+                    <p class="meta">Indianapolis, IN &middot; W-2<br>4+ years of .NET development</p>
+                    <div class="ghost-lines"><i></i><i></i></div>
+                </article>
+
+                <article class="printout new reveal r4">
+                    <div class="yr">Posted 2026</div>
+                    <h3><span class="hl">Software Engineer</span></h3>
+                    <p class="meta">Indianapolis, IN &middot; W-2 or 1099<br>3+ years of software development</p>
+                    <div class="ghost-lines"><i></i><i></i></div>
+                </article>
+
+                <div class="pen" style="left:1420px; top:270px; width:440px;">
+                    the job I have now
+                    <svg class="stroke" viewBox="0 0 120 150" style="position:absolute; left:40px; top:70px; width:120px; height:150px; overflow:visible;"><path d="M20 10 C 40 60, 60 100, 70 140 M70 140 l -18 -14 M70 140 l 8 -20"/></svg>
+                </div>
+            </section>
+
+            <!-- =====================================================
+                 SLIDE 3: WHAT CHANGED ON PAPER
+                 Notes: Two kinds of change. First, breadth: from one
+                 stack to "whatever the client needs," and front-end went
+                 from nice-to-have to required. Second, three AI bullets
+                 were added to the requirements. But the list of what we
+                 actually do? Same five items, reworded.
+                 ===================================================== -->
+            <section class="slide">
+                <div class="head reveal r1"><span>Jobs &amp; Roles Workshop</span><span>03 / 07</span></div>
+                <div class="label reveal r1">What you bring</div>
+                <h2 class="headline reveal r2">What changed on paper</h2>
+
+                <div class="excerpt">
+                    <div class="row reveal r3">
+                        <div class="line">Develop server-side solutions in <span class="hl">Java, C#, JavaScript, and Python</span></div>
+                        <div class="pen">was .NET only</div>
+                    </div>
+                    <div class="row reveal r4">
+                        <div class="line">Write functional <span class="hl d2">front-end code</span> using modern frameworks</div>
+                        <div class="pen">was a nice-to-have</div>
+                    </div>
+
+                    <div class="ai-group reveal r5">
+                        <div class="row"><div class="line">Comfort using <span class="hl d3">LLMs and other AI tools</span> to rapidly learn</div></div>
+                        <div class="row"><div class="line">Comfort with <span class="hl d3">agentic AI</span> as a tool to build well-engineered software</div></div>
+                        <div class="row"><div class="line">Familiarity with <span class="hl d3">prompt, context, and agent management</span></div></div>
+                        <svg class="stroke" viewBox="0 0 50 300" preserveAspectRatio="none"><path d="M6 6 C 30 8, 30 20, 30 60 L 30 130 C 30 145, 40 150, 46 150 C 40 150, 30 155, 30 170 L 30 240 C 30 280, 30 292, 6 294"/></svg>
+                        <div class="pen">new: 3 AI bullets</div>
+                    </div>
+                </div>
+
+                <p class="footnote reveal r6">Unchanged: the five-item list of what we actually do, lightly reworded.</p>
+            </section>
+
+            <!-- =====================================================
+                 SLIDE 4: WHAT WE ACTUALLY HIRE FOR
+                 Notes: I sat down with three colleagues who interview
+                 with me. Syntax and trivia matter less. We want to hear
+                 your approach. If you know one framework deeply, the
+                 patterns transfer, so we can put you on another. Teams are
+                 smaller, so developers cover analysis and testing too.
+                 Full luddites and AI fanatics are both a red flag.
+                 And curiosity, especially early in a career.
+                 ===================================================== -->
+            <section class="slide">
+                <div class="head reveal r1"><span>Jobs &amp; Roles Workshop</span><span>04 / 07</span></div>
+                <div class="label reveal r1">From our interview room</div>
+                <h2 class="headline reveal r2">What we actually hire for now</h2>
+
+                <div class="quad">
+                    <div class="q reveal r3"><h3><span class="hl">Judgment</span></h3><p>Tell me about a call you made, and why.</p></div>
+                    <div class="q reveal r4"><h3>Breadth</h3><p>Smaller teams. Wear the analyst and tester hats too.</p></div>
+                    <div class="q reveal r5"><h3>Pragmatism</h3><p>Not a holdout. Not a zealot.</p></div>
+                    <div class="q reveal r6"><h3>Curiosity</h3><p>Especially early in a career.</p></div>
+                </div>
+
+                <div class="pen" style="left:1500px; top:840px; width:340px;">
+                    <svg class="stroke" viewBox="0 0 140 100" style="position:absolute; left:-120px; top:-90px; width:140px; height:100px; overflow:visible;"><path d="M130 90 C 90 80, 40 50, 10 10 M10 10 l 4 22 M10 10 l 22 2"/></svg>
+                    most of this isn't on the posting
+                </div>
+            </section>
+
+            <!-- =====================================================
+                 SLIDE 5: THE PASSENGER
+                 Notes: This line from the meeting stuck with me. A
+                 candidate can be deep into AI agents and still be a
+                 passenger. AI can do more of the work. Somebody still has
+                 to own the call.
+                 ===================================================== -->
+            <section class="slide">
+                <div class="head reveal r1"><span>Jobs &amp; Roles Workshop</span><span>05 / 07</span></div>
+                <blockquote class="quote reveal r2">
+                    <span class="mark">&ldquo;</span>Deep into agentic development, but can't name a judgment call you made? You're a <span class="hl g">passenger</span>.
+                </blockquote>
+                <p class="attrib reveal r3">Our hiring team, paraphrased</p>
+                <div class="pen" style="left:1180px; top:840px; width:560px;">AI does more of the work. Someone still owns the call.</div>
+            </section>
+
+            <!-- =====================================================
+                 SLIDE 6: WHY ISN'T THAT ON THE POSTING?
+                 Notes: Two reasons, and neither is carelessness.
+                 One: "must have good judgment" screens out nobody.
+                 Most people believe they have it. So we test for it in the
+                 interview instead. Two: postings are maintained by people
+                 who have other jobs. Expectations are moving faster than
+                 anyone has time to rewrite them. Ours hasn't fully caught up.
+                 ===================================================== -->
+            <section class="slide">
+                <div class="head reveal r1"><span>Jobs &amp; Roles Workshop</span><span>06 / 07</span></div>
+                <div class="label reveal r1">Requirements not listed</div>
+                <h2 class="headline reveal r2">Why isn't that on the posting?</h2>
+
+                <div class="reasons">
+                    <div class="reason reveal r3">
+                        <div class="num"><svg class="stroke" viewBox="0 0 102 102"><path d="M60 8 C 20 2, 4 30, 8 56 C 12 86, 50 98, 78 86 C 100 74, 100 30, 76 14 C 66 8, 56 6, 44 9"/></svg>1</div>
+                        <h3>You can't advertise for judgment.</h3>
+                        <p>Most people believe they have it. So we test for it in the interview.</p>
+                    </div>
+                    <div class="reason reveal r4">
+                        <div class="num"><svg class="stroke" viewBox="0 0 102 102"><path d="M60 8 C 20 2, 4 30, 8 56 C 12 86, 50 98, 78 86 C 100 74, 100 30, 76 14 C 66 8, 56 6, 44 9"/></svg>2</div>
+                        <h3>Postings are kept up by people with other jobs.</h3>
+                        <p>Expectations move faster than anyone has time to rewrite them. <span class="hl d2">Ours hasn't fully caught up.</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =====================================================
+                 SLIDE 7: SO WHAT
+                 Notes: So the postings you see in the field are a
+                 snapshot, and snapshots age. If you're building
+                 curriculum from postings alone, you may trail what
+                 employers want. Talk to hiring managers too. And if
+                 you're hiring or job hunting, treat the posting as a
+                 starting point, not the whole job. Thanks. Hand off to Marie.
+                 ===================================================== -->
+            <section class="slide">
+                <div class="head reveal r1"><span>Jobs &amp; Roles Workshop</span><span>07 / 07</span></div>
+                <h2 class="statement reveal r2">Job postings can <span class="hl">lag</span> what employers actually expect.</h2>
+
+                <div class="audiences">
+                    <div class="aud reveal r3">
+                        <div class="who">Building curriculum?</div>
+                        <p>Postings alone can trail the job. Talk to hiring managers too.</p>
+                    </div>
+                    <div class="aud reveal r4">
+                        <div class="who">Hiring or job hunting?</div>
+                        <p>Read the posting as a <span class="hl g d2">starting point</span>, not the whole job.</p>
+                    </div>
+                </div>
+
+                <div class="byline reveal r5">Brad Russell<span>E-gineering</span></div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        /* =========================================================
+           SLIDE PRESENTATION CONTROLLER
+           Fixed 1920x1080 stage, scaled to fit. Keyboard, wheel,
+           and touch navigation. #n in the URL jumps to slide n.
+           ========================================================= */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.stage = document.getElementById('deckStage');
+                this.current = 0;
+                this.wheelLock = false;
+                this.setupStageScale();
+                this.setupKeyboardNav();
+                this.setupWheelNav();
+                this.setupTouchNav();
+                const fromHash = parseInt(location.hash.slice(1), 10);
+                this.show(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+            }
+
+            setupStageScale() {
+                const scale = () => {
+                    const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+                    const x = (window.innerWidth - 1920 * f) / 2;
+                    const y = (window.innerHeight - 1080 * f) / 2;
+                    this.stage.style.transform = `translate(${x}px, ${y}px) scale(${f})`;
+                };
+                scale();
+                window.addEventListener('resize', scale);
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    if (editor.isActive) return;
+                    const next = ['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'];
+                    const prev = ['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'];
+                    if (next.includes(e.key)) { e.preventDefault(); this.show(this.current + 1); }
+                    else if (prev.includes(e.key)) { e.preventDefault(); this.show(this.current - 1); }
+                    else if (e.key === 'Home') this.show(0);
+                    else if (e.key === 'End') this.show(this.slides.length - 1);
+                });
+            }
+
+            setupWheelNav() {
+                window.addEventListener('wheel', (e) => {
+                    if (editor.isActive || this.wheelLock || Math.abs(e.deltaY) < 20) return;
+                    this.wheelLock = true;
+                    this.show(this.current + (e.deltaY > 0 ? 1 : -1));
+                    setTimeout(() => { this.wheelLock = false; }, 700);
+                }, { passive: true });
+            }
+
+            setupTouchNav() {
+                let startX = 0;
+                window.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+                window.addEventListener('touchend', (e) => {
+                    if (editor.isActive) return;
+                    const dx = e.changedTouches[0].clientX - startX;
+                    if (Math.abs(dx) > 50) this.show(this.current + (dx < 0 ? 1 : -1));
+                }, { passive: true });
+            }
+
+            show(index) {
+                this.current = Math.max(0, Math.min(index, this.slides.length - 1));
+                this.slides.forEach((slide, i) => {
+                    const on = i === this.current;
+                    slide.classList.toggle('active', on);
+                    // Remove then re-add .visible so markup animations replay
+                    slide.classList.remove('visible');
+                    if (on) requestAnimationFrame(() => requestAnimationFrame(() => slide.classList.add('visible')));
+                });
+                history.replaceState(null, '', '#' + (this.current + 1));
+            }
+        }
+
+        /* =========================================================
+           INLINE EDITING
+           Hover the top-left corner or press E. Edits auto-save to
+           localStorage. Ctrl+S downloads a clean copy of the file.
+           ========================================================= */
+        const editor = {
+            isActive: false,
+            key: 'jd-behind-deck-edits',
+            selector: '.slide h1, .slide h2, .slide h3, .slide p, .slide li, .slide blockquote, .slide .pen, .slide .label, .slide .line, .slide .who, .slide .yr',
+
+            init() {
+                this.toggle = document.getElementById('editToggle');
+                this.restore();
+                document.addEventListener('input', () => this.save());
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); this.exportFile(); }
+                });
+            },
+
+            toggleEditMode() {
+                this.isActive = !this.isActive;
+                document.body.classList.toggle('editing', this.isActive);
+                this.toggle.classList.toggle('active', this.isActive);
+                this.toggle.textContent = this.isActive ? 'Done' : 'Edit';
+                document.querySelectorAll(this.selector).forEach((el) => {
+                    el.contentEditable = this.isActive ? 'true' : 'false';
+                });
+                if (!this.isActive) this.save();
+            },
+
+            save() {
+                try {
+                    const data = [...document.querySelectorAll(this.selector)].map((el) => el.innerHTML);
+                    localStorage.setItem(this.key, JSON.stringify(data));
+                } catch (e) { /* storage unavailable: edits stay in memory only */ }
+            },
+
+            restore() {
+                try {
+                    const data = JSON.parse(localStorage.getItem(this.key) || 'null');
+                    const els = document.querySelectorAll(this.selector);
+                    if (Array.isArray(data) && data.length === els.length) {
+                        els.forEach((el, i) => { el.innerHTML = data[i]; });
+                    }
+                } catch (e) { /* ignore bad or missing saved state */ }
+            },
+
+            exportFile() {
+                const clone = document.documentElement.cloneNode(true);
+                clone.querySelector('body').classList.remove('editing');
+                clone.querySelectorAll('[contenteditable]').forEach((el) => el.removeAttribute('contenteditable'));
+                clone.querySelectorAll('.slide').forEach((s, i) => {
+                    s.classList.remove('visible', 'active');
+                    if (i === 0) s.classList.add('active');
+                });
+                const toggle = clone.querySelector('#editToggle');
+                toggle.classList.remove('active', 'show');
+                toggle.textContent = 'Edit';
+                clone.querySelector('#deckStage').removeAttribute('style');
+                const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+                a.download = 'slides.html';
+                a.click();
+                URL.revokeObjectURL(a.href);
+            }
+        };
+
+        editor.init();
+
+        // Edit toggle: click, hover hotzone (400ms grace), or E key
+        (() => {
+            const hotzone = document.querySelector('.edit-hotzone');
+            const toggle = document.getElementById('editToggle');
+            let hideTimeout = null;
+            const hideSoon = () => {
+                hideTimeout = setTimeout(() => { if (!editor.isActive) toggle.classList.remove('show'); }, 400);
+            };
+            toggle.addEventListener('click', () => editor.toggleEditMode());
+            hotzone.addEventListener('click', () => editor.toggleEditMode());
+            hotzone.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); toggle.classList.add('show'); });
+            hotzone.addEventListener('mouseleave', hideSoon);
+            toggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+            toggle.addEventListener('mouseleave', hideSoon);
+            document.addEventListener('keydown', (e) => {
+                if ((e.key === 'e' || e.key === 'E') && !e.target.isContentEditable && !e.ctrlKey && !e.metaKey) {
+                    editor.toggleEditMode();
+                }
+            });
+        })();
+
+        const deck = new SlidePresentation();
+    </script>
+</body>
+</html>
